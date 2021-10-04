@@ -1,4 +1,7 @@
 overview.pdf
+*.bbl
+*.blg
+*.gz
 *.vrb
 *.tex~
 *.toc
