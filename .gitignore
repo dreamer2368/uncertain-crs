@@ -1,0 +1,11 @@
+overview.pdf
+*.vrb
+*.tex~
+*.toc
+*.aux
+*.log
+*.nav
+*.out
+*.snm
+*.flc
+
