@@ -12,4 +12,6 @@ overview.pdf
 *.out
 *.snm
 *.flc
+bolsig/*
+!bolsig/*.py
 
