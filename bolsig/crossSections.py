@@ -1,10 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-# datasets
-datasets = ["Biagi","BSR","Hayashi","IST-Lisbon","Morgan","Phelps","Puech","SIGLO","TRINITI"]
-Nsets = len(datasets)
-
 # Map rxn type names to integer
 typeDictS2I = {"ELASTIC":    0,
                "EFFECTIVE":  1,
@@ -50,6 +46,7 @@ class singleCrossSection:
     colName = ''
     data = np.zeros((1,2))
     deltaE = np.nan
+    info = ''
 
     def printToScreen(self):
         """Prints collision information to the screen."""
@@ -76,7 +73,7 @@ class multipleCrossSections:
     Attributes
     ----------
     crs : List of singleCrossSection objects
-    
+
     Methods
     -------
     parseLXCatFile(filename):
@@ -107,9 +104,9 @@ class multipleCrossSections:
         excitation, ionization, or attachment (capital letters
         required, key words are case sensitive).
 
-        2nd line 
+        2nd line
         Name of the target particle species. This name is a character
-        string, freely chosen by the user, e.g. "Ar". 
+        string, freely chosen by the user, e.g. "Ar".
 
         3rd line
         For elastic and effective collisions, the ratio of the
@@ -138,7 +135,7 @@ class multipleCrossSections:
                 if (line.strip() == "ELASTIC"    or line.strip() == "EFFECTIVE"  or
                     line.strip() == "EXCITATION" or line.strip() == "IONIZATION" or
                     line.strip() == "ATTACHMENT"                                    ):
-            
+
                     self.crs.append(singleCrossSection())
                     self.crs[ncrs].colType = typeDictS2I[line.strip()]
                     self.crs[ncrs].colName = fp.readline().strip()
@@ -149,19 +146,21 @@ class multipleCrossSections:
                     # Read until we find a number
                     tmp = fp.readline().strip()
                     while (not tmp[0].isdigit() and not (tmp=='')):
+                        if (not tmp[0]=='-'):
+                            self.crs[ncrs].info += tmp + '\n'
                         tmp = fp.readline().strip()
 
                     # Once we find numbers, read until we don't find a number
                     d = tmp.split()
                     self.crs[ncrs].data[0,0] = np.float(d[0])
                     self.crs[ncrs].data[0,1] = np.float(d[1])
-                    tmp = fp.readline().strip()            
+                    tmp = fp.readline().strip()
                     while (tmp[0].isdigit() and not (tmp=='')):
                         d = tmp.split()
                         self.crs[ncrs].data = \
                             np.append(self.crs[ncrs].data,
                                       [[np.float(d[0]), np.float(d[1])]], axis=0)
-                        tmp = fp.readline().strip()            
+                        tmp = fp.readline().strip()
 
                     print("Found {0:s} collison: {1:s}".format(typeDictI2S[self.crs[ncrs].colType],
                                                                self.crs[ncrs].colName))
@@ -178,6 +177,19 @@ class multipleCrossSections:
         #for c in self.crs:
         #    c.plot()
 
+    def writeLXCatFile(self,filename):
+
+        with open(filename,'w') as fp:
+            for c in self.crs:
+                fp.write(typeDictI2S[c.colType]+'\n')
+                fp.write(c.colName+'\n')
+                if (typeDictI2S[c.colType] != 'ATTACHMENT'):
+                    fp.write("%.6E" % c.deltaE)
+                fp.write(c.info)
+                fp.write('-' * 30 + '\n')
+                for k in range(np.size(c.data,0)):
+                    fp.write("%.6E\t%.6E\n" % (c.data[k,0], c.data[k,1]))
+                fp.write('-' * 30 + '\n\n')
 
 
 #################################################################
@@ -190,14 +202,10 @@ if __name__ == '__main__':
     #print("  Dataset = {0:s}".format(datasets[k]))
     #tmp = multipleCrossSections("./%s.txt" % datasets[k])
 
-    for dataset in datasets:
-        filename = "./%s.txt" % dataset
-        print("="*50)
-        print("  Dataset = {0:s}".format(dataset))
-        print("="*50)
-        tmp = multipleCrossSections(filename)
-        rawfilename = "./%s.raw.txt" % dataset
-        np.savetxt(rawfilename, tmp.crs[0].data, fmt='%1.15e')
-
-        
-
+    dataset = "Biagi"
+    filename = "./crs/%s.txt" % dataset
+    print("="*50)
+    print("  Dataset = {0:s}".format(dataset))
+    print("="*50)
+    tmp = multipleCrossSections(filename)
+    tmp.writeLXCatFile('./crs/testCRS.txt')
