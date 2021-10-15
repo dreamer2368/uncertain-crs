@@ -184,7 +184,7 @@ class multipleCrossSections:
                 fp.write(typeDictI2S[c.colType]+'\n')
                 fp.write(c.colName+'\n')
                 if (typeDictI2S[c.colType] != 'ATTACHMENT'):
-                    fp.write("%.6E" % c.deltaE)
+                    fp.write("%.6E\n" % c.deltaE)
                 fp.write(c.info)
                 fp.write('-' * 30 + '\n')
                 for k in range(np.size(c.data,0)):
