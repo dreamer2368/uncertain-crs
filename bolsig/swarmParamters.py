@@ -17,7 +17,11 @@ typeDictS2I = {"Electric field / N (Td)":               0,
                "Inelastic power loss /N (eV m3/s)":     14,
                "Growth power /N (eV m3/s)":             15,
                "# of iterations":                       16,
-               "# of grid trials":                      17 }
+               "# of grid trials":                      17,
+               "Longitud. diffusion coef. *N (1/m/s)":  18,
+               "Bulk mobility *N (1/m/V/s)":            19,
+               "Bulk T diffusion coef. *N (1/m/s)":     20,
+               "Bulk L diffusion coef. *N (1/m/s)":     21 }
 typeDictI2S = {0: "Electric field / N (Td)",
                1: "Grid type",
                2: "Maximum energy",
@@ -35,7 +39,21 @@ typeDictI2S = {0: "Electric field / N (Td)",
                14: "Inelastic power loss /N (eV m3/s)",
                15: "Growth power /N (eV m3/s)",
                16: "# of iterations",
-               17: "# of grid trials" }
+               17: "# of grid trials",
+               18: "Longitud. diffusion coef. *N (1/m/s)",
+               19: "Bulk mobility *N (1/m/V/s)",
+               20: "Bulk T diffusion coef. *N (1/m/s)",
+               21: "Bulk L diffusion coef. *N (1/m/s)" }
+
+def readNumber(str):
+    try:
+        x = np.double(str)
+    except ValueError:
+        try:
+            x = np.double(str[:-4] + 'E' + str[-4:])
+        except ValueError:
+            raise ValueError('Cannot read the number "%s".' % str)
+    return x
 
 class singleOutput:
     data = np.zeros((1,2))
@@ -99,7 +117,7 @@ class bolsigOutput:
                         d = tmp.split()
                         self.outputs[dataType].data = \
                             np.append(self.outputs[dataType].data,
-                                      [[np.double(d[0]), np.double(d[1])]], axis=0)
+                                      [[readNumber(d[0]), readNumber(d[1])]], axis=0)
                         tmp = fp.readline().strip()
 
                     self.outputs[dataType].printToScreen
@@ -113,5 +131,8 @@ class bolsigOutput:
 
 
 if __name__ == '__main__':
-    tmp = bolsigOutput('Biagi-transport.dat')
-    np.savetxt('Biagi.muN.raw.txt',tmp.outputs[4].data, fmt='%1.15e')
+    dataset = 'Biagi'
+    tmp = bolsigOutput('%s-transport.dat' % dataset)
+    np.savetxt('%s.muN.raw.txt' % dataset,tmp.outputs[4].data, fmt='%1.15e')
+    np.savetxt('%s.DN.raw.txt' % dataset,tmp.outputs[5].data, fmt='%1.15e')
+    np.savetxt('%s.DLN.raw.txt' % dataset,tmp.outputs[18].data, fmt='%1.15e')
