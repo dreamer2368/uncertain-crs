@@ -88,7 +88,7 @@ class multipleCrossSections:
         self.crs = []
         self.parseLXCatFile(filename)
 
-    def parseLXCatFile(self, filename):
+    def parseLXCatFile(self, filename, printOut=False):
         """Read LXCat file.
 
         File format is assumed to obey the LXCat conventions, as
@@ -162,17 +162,20 @@ class multipleCrossSections:
                                       [[np.float(d[0]), np.float(d[1])]], axis=0)
                         tmp = fp.readline().strip()
 
-                    print("Found {0:s} collison: {1:s}".format(typeDictI2S[self.crs[ncrs].colType],
-                                                               self.crs[ncrs].colName))
+                    if printOut:
+                        print("Found {0:s} collison: {1:s}".format(typeDictI2S[self.crs[ncrs].colType],
+                                                                   self.crs[ncrs].colName))
                     ncrs +=1
 
 
                 line = fp.readline()
 
-            print("\nDone reading file.  Found the following cross sections:")
+            if printOut:
+                print("\nDone reading file.  Found the following cross sections:")
 
-        for c in self.crs:
-            c.printToScreen()
+        if printOut:
+            for c in self.crs:
+                c.printToScreen()
 
         #for c in self.crs:
         #    c.plot()

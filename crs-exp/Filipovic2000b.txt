@@ -1,0 +1,41 @@
+Reference
+Filipovic, D. M., Marinkovic, B. P., Pejcev, V., & Vuskovic, L. (2000). Electron-impact excitation of argon : II . The lowest resonance 4s[3/2]1 and metastable 4s[3/2]2 and 4s’[A1/2]0 states. Journal of Physics B: Atomic and Molecular and Optical Physics, 33, 2081–2094.
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E       eV          n/a     n/a
+crs     m2          n/a     n/a
+crs-max m2          n/a     n/a
+*********************************
+
+Data
+############################
+level 1, integral
+############################
+E     crs       crs-max
+=============================
+20    53e-23    17e-23
+40    18e-23    6e-23
+=============================
+
+Data
+############################
+level 2, integral
+############################
+E     crs       crs-max
+=============================
+20    69e-23    23e-23
+40    93e-23    31e-23
+50    74e-23    24e-23
+80    53e-23    17e-23
+=============================
+
+Data
+############################
+level 3, integral
+############################
+E     crs       crs-max
+=============================
+20    12e-23    4e-23
+40    6.3e-23   2.9e-23
+=============================

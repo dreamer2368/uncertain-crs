@@ -442,6 +442,71 @@ Uncertainty is not provided. This is a theoretical (analytical) quantum mechanic
 
 \clearpage
 
+\section{Excitation cross section}
+
+\begin{itemize}
+\item \cite{Pitchford2013}\\
+The excitation cross sections in the datasets PHELPS,
+MORGAN, and BIAGI-v7.1 contain one, two, or three excitation levels, respectively, and the magnitudes of these cross sections were first estimated by theory and/or experiment and then adjusted to yield good fits to swarm parameters
+\item \cite{Pitchford2013}\\
+The remaining four datasets (BIAGI-v8.9, HAYASHI,
+IST-LISBON and PUECH) are attempts to assemble complete sets of electron–argon scattering cross sections from beam measurements and/or theory. We will refer to these as the ‘detailed’ datasets. In all cases, some modifications or extensions of the literature values were needed to obtain consistency with swarm parameters.
+\end{itemize}
+
+Angle-integrated cross section experiment: \cite{Chutjian1981,Filipovic2000,Khakoo2003}
+
+\subsection{Biagi}
+Started from some theoretical formula $+$ some adjustment to fit swarm experiments
+\begin{itemize}
+\item \cite{Pitchford2013}\\
+The dipole allowed states were described by BEF scaling (Kim 2001, Kim 2007) with oscillator strengths from theory and experiment which had been published up to 2010. The agreement with theory and experiment is very good (BSR~\cite{Zatsarinny2004}, Allan et al~\cite{Allan2006}, and Berkowitz~\cite{Berkowitz2002}).
+\item \cite{Pitchford2013}\\
+The analytical cross section fit to the BEF formula was only used above the resonance region. In the resonance region we used the cross section of Allan et al (2006) and scaled it to give a good fit to the light emission measurements of Tachibana~\cite{Tachibana1986} and the reduced ionization coefficients measured by Kruithof~\cite{Kruithof1940} for version 7.1 and by Kruithof~\cite{Kruithof1940} and Specht et al~\cite{Specht1980} for version 8.9.
+\end{itemize}
+
+\subsection{IST-Lisbon}
+Direct excitation cross section up to $100eV$ were obtained~\cite{Alves2014}:
+\begin{itemize}
+\item \cite[Table 4]{Khakoo2003}: $4s$ metastable and resonance levels. Resonance levles are multiplied by $0.5$. Error specified.\\
+LXCat data seems to be interpolated from the experimental values above, having higher energy resolution.
+It is not clear why they multiplied the factor of $0.5$.
+\item \cite[Figure 8]{Chilton1998}: $4p$ levels. Error bar plotted.
+\item \cite{Pitchford2013}\\
+The previous direct excitation cross sections were extended from 100 eV to 1 keV, by using analytical asymptotic expressions ``similar to'' those proposed by Bretagne et al (1986) and Bretagne et al (1982) (based on the time- dependent perturbation theory in conjunction with the first Born approximation).
+\item \cite{Pitchford2013}\\
+The IST-LISBON dataset is based mainly on measurements. Only one adjustment was made in order to improve the agreement with measured swarm parameters--- a scale factor of 0.5 was applied to the measurements of Khakoo et al (2004)~\cite{Khakoo2003} for the resonance levels
+\end{itemize}
+
+\subsection{BSR}
+\begin{itemize}
+\item \cite{Pitchford2013}\\
+The excitation results, especially for incident projectile energies above the ionization threshold and for weak, optically forbidden transitions, are very sensitive to details of the theoretical model. Models that only include discrete states, such as the 31-state calculation (Zatsarinny and Bartschat 2004), are expected to generally overestimate the true excitation cross sections.
+($\ldots$) As discussed in section 2 of this paper, the BSR-500 cross sections are even somewhat lower than many experimental data, while the BSR-31 cross sections were certainly too large.
+\end{itemize}
+
+\subsection{Puech}
+\begin{itemize}
+\item \cite{Puech1986}\\
+For inelastic processes, we have used the set of collision cross sections previously established in paper I~\cite{Bretagne1986}.
+This set of cross sections takes account of 40 individual excited levels and includes the three shells of ionization.
+\item \cite{Bretagne1986}\\
+Uncertainty is not provided. This is a theoretical (analytical) quantum mechanics calculation of cross section with some fitting of other literatures.
+For a forbidden transition to state $j$ (metastables?),
+\begin{equation}
+\sigma_j = \frac{8\pi a_0^2 R}{mc^2\beta^2}b_jB_j,
+\end{equation}
+and for an allowed transition (resonance?)
+\begin{equation}
+\sigma_j = \frac{8\pi a_0^2 R^2}{mc^2\beta^2}\frac{F_{0j}}{W_j}\left[ \ln\left(\frac{\beta^2}{1-\beta^2}\frac{2mc^2}{R}C_j\right) - \beta^2 \right]B_j,
+\end{equation}
+where $B_j$ is an empirical low-energy modifier,
+\begin{equation}
+B_j = \frac{ [ 1 - (2W_j/mc^2\beta^2)^{\alpha_j} ]^{\beta_j} }{(mc^2\beta^2)^{\gamma_j}}.
+\end{equation}
+\item \cite{Bretagne1986}\\
+Figure 1 and 2 show three lowest excitation levels, compared with experimental measurements~\cite{Chutjian1981}. Table 1 and 2 show the parameter values for theoretical formula they used.
+\end{itemize}
+
 \appendix
 \input{appendix.tex}
 

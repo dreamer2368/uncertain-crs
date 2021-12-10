@@ -14,4 +14,8 @@ overview.pdf
 *.flc
 bolsig/*
 !bolsig/*.py
+crs-exp/crs.*.txt
+crs-exp/figures
+swarm/*.*.txt
+swarm/*.png
 

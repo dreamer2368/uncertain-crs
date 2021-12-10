@@ -1,0 +1,23 @@
+Reference
+Filipovic, D. M., Marinkovic, B. P., Pejcev, V., & Vuskovic, L. (2000). Electron-impact excitation of argon: I. The 4s’[1/2]1, 4p[1/2]1, and 4p’[1/2]0 states. Journal of Physics B: Atomic and Molecular and Optical Physics, 33, 677.
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E       eV          n/a     n/a
+crs     m2          n/a     n/a
+crs-max m2          n/a     n/a
+*********************************
+
+Data
+############################
+level 4, integral
+############################
+E     crs       crs-max
+=============================
+16      150e-23     75e-23
+20      176e-23     61e-23
+30      297e-23     100e-23
+40      313e-23     110e-23
+50      295e-23     100e-23
+80      193e-23     67e-23
+=============================
