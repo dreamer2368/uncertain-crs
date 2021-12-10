@@ -1,30 +1,69 @@
 Reference
-Filipovic, D. M., Marinkovic, B. P., Pejcev, V., & Vuskovic, L. (2000). Electron-impact excitation of argon : II . The lowest resonance 4s[3/2]1 and metastable 4s[3/2]2 and 4s’[A1/2]0 states. Journal of Physics B: Atomic and Molecular and Optical Physics, 33, 2081–2094.
+Khakoo, M. A., Vandeventer, P., Childers, J. G., Kanik, I., Fontes, C. J., Bartschat, K., Zeman, V., Madison, D. H., Saxena, S., Srivastava, R., & Stauffer, A. D. (2004). Electron impact excitation of the argon 3p54s configuration: Differential cross-sections and cross-section ratios. Journal of Physics B: Atomic, Molecular and Optical Physics, 37(1), 247–281. https://doi.org/10.1088/0953-4075/37/1/016
 
 Variables (Var,Unit,Rms,Max)
 *********************************
 E         eV          n/a     n/a
-crs1      cm2         n/a     n/a
-crs1-rms  cm2         n/a     n/a
-crs2      cm2         n/a     n/a
-crs2-rms  cm2         n/a     n/a
-crs3      cm2         n/a     n/a
-crs3-rms  cm2         n/a     n/a
-crs4      cm2         n/a     n/a
-crs4-rms  cm2         n/a     n/a
+crs       cm2         n/a     n/a
+crs-rms   cm2         n/a     n/a
 *********************************
 
 Data
 ############################
-level 1
+Excitation, level 1
 ############################
-E crs1  crs1-rms  crs2  crs2-rms  crs3  crs3-rms  crs4  crs4-rms
+E    crs      crs-rms
 =============================
-14 4.86E-18 9.92E-19 4.45E-18 8.95E-19 6.98E-19 1.93E-19 7.72E-18 1.51E-18
-15 8.81E-18 1.59E-18 8.88E-18 1.57E-18 1.64E-18 3.75E-19 1.59E-17 2.82E-18
-17.5 7.42E-18 1.36E-18 8.50E-18 1.55E-18 1.46E-18 3.08E-19 1.80E-17 3.28E-18
-20 6.53E-18 1.04E-18 8.14E-18 1.29E-18 1.37E-18 2.32E-19 1.87E-17 2.94E-18
-30 1.96E-18 3.59E-19 6.52E-18 1.21E-18 4.00E-19 7.51E-20 2.07E-17 3.87E-18
-50 3.02E-19 6.89E-20 4.86E-18 1.07E-18 7.26E-20 1.76E-20 1.78E-17 3.93E-18
-100 4.18E-20 1.08E-20 4.06E-18 9.13E-19 1.33E-20 5.00E-21 1.55E-17 3.47E-18
+14   4.86E-18 9.92E-19
+15   8.81E-18 1.59E-18
+17.5 7.42E-18 1.36E-18
+20   6.53E-18 1.04E-18
+30   1.96E-18 3.59E-19
+50   3.02E-19 6.89E-20
+100  4.18E-20 1.08E-20
+=============================
+
+Data
+############################
+Excitation, level 2
+############################
+E    crs      crs-rms
+=============================
+14   4.45E-18 8.95E-19
+15   8.88E-18 1.57E-18
+17.5 8.50E-18 1.55E-18
+20   8.14E-18 1.29E-18
+30   6.52E-18 1.21E-18
+50   4.86E-18 1.07E-18
+100  4.06E-18 9.13E-19
+=============================
+
+Data
+############################
+Excitation, level 3
+############################
+E    crs      crs-rms
+=============================
+14   6.98E-19 1.93E-19
+15   1.64E-18 3.75E-19
+17.5 1.46E-18 3.08E-19
+20   1.37E-18 2.32E-19
+30   4.00E-19 7.51E-20
+50   7.26E-20 1.76E-20
+100  1.33E-20 5.00E-21
+=============================
+
+Data
+############################
+Excitation, level 4
+############################
+E    crs      crs-rms
+=============================
+14   7.72E-18 1.51E-18
+15   1.59E-17 2.82E-18
+17.5 1.80E-17 3.28E-18
+20   1.87E-17 2.94E-18
+30   2.07E-17 3.87E-18
+50   1.78E-17 3.93E-18
+100  1.55E-17 3.47E-18
 =============================

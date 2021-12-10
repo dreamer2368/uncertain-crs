@@ -10,7 +10,7 @@ crs-max m2          n/a     n/a
 
 Data
 ############################
-level 1, integral
+Excitation, level 1
 ############################
 E     crs       crs-max
 =============================
@@ -20,7 +20,7 @@ E     crs       crs-max
 
 Data
 ############################
-level 2, integral
+Excitation, level 2
 ############################
 E     crs       crs-max
 =============================
@@ -32,7 +32,7 @@ E     crs       crs-max
 
 Data
 ############################
-level 3, integral
+Excitation, level 3
 ############################
 E     crs       crs-max
 =============================
