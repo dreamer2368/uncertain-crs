@@ -1,0 +1,28 @@
+Reference
+Li, G. P., Takayanagi, T., Wakiya, K., Suzuki, H., Ajiro, T., Yagi, S., Kano, S. S., & Takuma, H. (1988). Determination of cross sections and oscillator strengths for argon by electron-energy-loss spectroscopy. Physical Review A, 38(3), 1240–1247. https://doi.org/10.1103/PhysRevA.38.1240
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E         eV          n/a     n/a
+crs       cm2         n/a     14%
+*********************************
+
+Data
+############################
+Excitation, level 2
+############################
+E    crs
+=============================
+400.5634201580015 2.640557098750494e-18
+497.29206677533506 2.23173411020025e-18
+=============================
+
+Data
+############################
+Excitation, level 4
+############################
+E    crs
+=============================
+396.8786575783061 9.647432360583041e-18
+497.67901567471904 8.325140696006335e-18
+=============================
