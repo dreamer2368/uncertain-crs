@@ -59,8 +59,12 @@ class singleOutput:
     data = np.zeros((1,2))
     inputName = ''
     outputName = ''
+    species = ''
+    collisionType = ''
+    deltaE = 0.
 
     def printToScreen(self):
+        print("{0:s}\t{1:s}\t{2:.6e}".format(self.species,self.collisionType,self.deltaE))
         print("{0:s}\t{1:s}".format(self.inputName,self.outputName))
         for k in range(self.data.shape[0]):
             print("{0:.6e}\t{1:.6e}".format(self.data[k,0], self.data[k,1]))
@@ -102,15 +106,50 @@ class bolsigOutput:
             while (line != ''):
                 if (line.strip() != ''):
 
-                    # Read table. Split by tab.
-                    left, right = line.split('\t')
-                    dataType = typeDictS2I[right.strip()]
+                    NtableLabel = len(line.strip().split('\t'))
+                    Nformat = len(line.strip().split('   '))
+                    if ((NtableLabel==1) and (Nformat==1)):
+                        inputSpecies = line.strip()
+                        inputCollision = ''
+                        inputE = 0.
+                        line = fp.readline()
+                    if ((NtableLabel==1) and (Nformat>1)):
+                        # If table is not split by tab, it specified rate coefficients.
+                        formatString = line.strip().split('   ')
+                        if (Nformat==3):
+                            tmpDataTypeString = formatString[0].strip()
+                            inputSpecies = formatString[1].strip()
+                            inputCollision = formatString[2].strip()
+                            inputE = 0.
+                        elif (Nformat==4): # last argument is simply 'eV'.
+                            tmpDataTypeString = formatString[0].strip()
+                            inputSpecies = formatString[1].strip()
+                            inputCollision = formatString[2].strip()
+                            inputE = readNumber(formatString[-1][:-3])
+                        # Read table. Split by tab.
+                        line = fp.readline().strip()
+                        left, right = line.split('\t')
+                    else:
+                        # Read table. Split by tab.
+                        left, right = line.split('\t')
+                        tmpDataTypeString = right.strip()
+
+                    if tmpDataTypeString not in typeDictS2I:
+                        nDict = len(typeDictS2I)
+                        typeDictS2I[tmpDataTypeString] = nDict
+                        typeDictI2S[nDict] = tmpDataTypeString
+                    dataType = typeDictS2I[tmpDataTypeString]
+
                     if dataType in self.outputs:
                         print("Warning: output '%s' already exists and will be overwritten." % typeDictI2S[dataType])
                     self.outputs.update({dataType: singleOutput()})
-                    # self.outputs.append(singleOutput())
                     self.outputs[dataType].inputName = left.strip()
                     self.outputs[dataType].outputName = right.strip()
+                    if (NtableLabel==1):
+                        self.outputs[dataType].species = inputSpecies
+                        self.outputs[dataType].collisionType = inputCollision
+                        self.outputs[dataType].deltaE = inputE
+
                     # Once we find numbers, read until we don't find a number
                     tmp = fp.readline().strip()
                     while (not (tmp=='') and tmp[0].isdigit()):
@@ -131,8 +170,8 @@ class bolsigOutput:
 
 
 if __name__ == '__main__':
-    dataset = 'Biagi'
-    tmp = bolsigOutput('%s-transport.dat' % dataset)
-    np.savetxt('%s.muN.raw.txt' % dataset,tmp.outputs[4].data, fmt='%1.15e')
-    np.savetxt('%s.DN.raw.txt' % dataset,tmp.outputs[5].data, fmt='%1.15e')
-    np.savetxt('%s.DLN.raw.txt' % dataset,tmp.outputs[18].data, fmt='%1.15e')
+    dataset = 'Phelps'
+    tmp = bolsigOutput('output/datasets/%s-transport.dat' % dataset)
+    # np.savetxt('%s.muN.raw.txt' % dataset,tmp.outputs[4].data, fmt='%1.15e')
+    # np.savetxt('%s.DN.raw.txt' % dataset,tmp.outputs[5].data, fmt='%1.15e')
+    # np.savetxt('%s.DLN.raw.txt' % dataset,tmp.outputs[18].data, fmt='%1.15e')

@@ -84,133 +84,127 @@ end
 % set(gca,'fontsize',20,'ticklabelinterpreter','latex','yscale','log','xscale','log');
 
 %%
-clear all
 close all
+clear all
 clc
 
-refs = {'AlAminLucas1987','GoldenFisher1961','Kruithof1940','KucukarpaciLucas1981','MilloyCrompton1977','NakamuraKurachi1988','PackPhelps1961','Robertson1977','RobertsonRee1972','Specht1980','Tachibana1986'};
+refs = {'Chutjian1981','Schappe1994','Filipovic2000b','Khakoo2004'};
+Nref = length(refs);
 
 idx=1;
-for k = [4,6,9]
-    if(k<9)
-        filename = strcat('./DLmu.',refs{k},'.txt');
-        DLmu{idx} = importdata(filename);
-        lgs{idx} = refs{k};
-    elseif(k==9)
-        filename = strcat('./DLmu.',refs{k},'.700.txt');
-        DLmu{idx} = importdata(filename);
-        lgs{idx} = strcat(refs{k},'-700Torr');
-        idx = idx+1;
-        filename = strcat('./DLmu.',refs{k},'.800.txt');
-        DLmu{idx} = importdata(filename);
-        lgs{idx} = strcat(refs{k},'-800Torr');
-    end
+for k = 1:4
+    filename = strcat('./excitation-level1/crs.',refs{k},'.txt');
+    W{idx} = importdata(filename);
+    lgs{idx} = strcat(refs{k});
     idx = idx+1;
 end
 
-NDLmu = length(DLmu);
-figure(2)
-for k=1:NDLmu
-    errorbar(DLmu{k}(:,1),DLmu{k}(:,2),DLmu{k}(:,3),'o','linewidth',1);
+idx=1;
+lgd = {};
+figure(1)
+for k=1:Nref
+    errorbar(W{k}(:,1),W{k}(:,2),W{k}(:,3),'o','linewidth',1);
+    lgd{idx} = lgs{k};
+    idx = idx+1;
     hold on
 end
 hold off
-xlabel('$E$ ($Td$)','interpreter','latex');
-ylabel('$D_L/\mu$ ($V$)','interpreter','latex');
-h=legend(lgs);
-set(h,'interpreter','latex','fontsize',15);
-set(gca,'fontsize',20,'ticklabelinterpreter','latex','yscale','log','xscale','log');
-
-%%
-clear all
-close all
-clc
-
-refs = {'AlAminLucas1987','GoldenFisher1961','Kruithof1940','KucukarpaciLucas1981','MilloyCrompton1977','NakamuraKurachi1988','PackPhelps1961','Robertson1977','RobertsonRee1972','Specht1980','Tachibana1986'};
-
-idx=1;
-for k = [1,5]
-    filename = strcat('./DTmu.',refs{k},'.txt');
-    DTmu{idx} = importdata(filename);
-    lgs{idx} = refs{k};
-    idx = idx+1;
-end
-
-NDTmu = length(DTmu);
-figure(2)
-for k=1:NDTmu
-    errorbar(DTmu{k}(:,1),DTmu{k}(:,2),DTmu{k}(:,3),'o','linewidth',1);
-    hold on
-end
-hold off
-xlabel('$E$ ($Td$)','interpreter','latex');
-ylabel('$D_T/\mu$ ($V$)','interpreter','latex');
-h=legend(lgs);
-set(h,'interpreter','latex','fontsize',15);
-set(gca,'fontsize',20,'ticklabelinterpreter','latex','yscale','log','xscale','log');
-
-%%
-clear all
-close all
-clc
-
-refs = {'AlAminLucas1987','GoldenFisher1961','Kruithof1940','KucukarpaciLucas1981','MilloyCrompton1977','NakamuraKurachi1988','PackPhelps1961','Robertson1977','RobertsonRee1972','Specht1980','Tachibana1986'};
-
-idx=1;
-for k = [2,3,10]
-    filename = strcat('./aion.',refs{k},'.txt');
-    aion{idx} = importdata(filename);
-    lgs{idx} = refs{k};
-    idx = idx+1;
-end
-
-Naion = length(aion);
-figure(2)
-for k=1:Naion
-    errorbar(aion{k}(:,1),aion{k}(:,2),aion{k}(:,3),'o','linewidth',1);
-    hold on
-end
-hold off
-xlabel('$E$ ($Td$)','interpreter','latex');
-ylabel('$\alpha_{ion}/N$ ($m^2$)','interpreter','latex');
-h=legend(lgs);
-set(h,'interpreter','latex','fontsize',15);
-set(gca,'fontsize',20,'ticklabelinterpreter','latex','yscale','log','xscale','log');
-
-%%
-clear all
-close all
-clc
-
-refs = {'AlAminLucas1987','GoldenFisher1961','Kruithof1940','KucukarpaciLucas1981','MilloyCrompton1977','NakamuraKurachi1988','PackPhelps1961','Robertson1977','RobertsonRee1972','Specht1980','Tachibana1986'};
-
-idx=1;
-for k = [11]
-    if (k==11)
-        filename = strcat('./aex1.',refs{k},'.txt');
-        aex1{idx} = importdata(filename);
-        filename = strcat('./aex2.',refs{k},'.txt');
-        aex2{idx} = importdata(filename);
-        filename = strcat('./aex3.',refs{k},'.txt');
-        aex3{idx} = importdata(filename);
-        filename = strcat('./aex4.',refs{k},'.txt');
-        aex4{idx} = importdata(filename);
-        lgs{idx} = refs{k};
-    end
-    idx = idx+1;
-end
-
-% Naion = length(aion);
-k=1;
-figure(2)
-errorbar(aex1{k}(:,1),aex1{k}(:,2),aex1{k}(:,3),'o','linewidth',1);
-hold on
-errorbar(aex2{k}(:,1),aex2{k}(:,2),aex2{k}(:,3),'o','linewidth',1);
-errorbar(aex3{k}(:,1),aex3{k}(:,2),aex3{k}(:,3),'o','linewidth',1);
-errorbar(aex4{k}(:,1),aex4{k}(:,2),aex4{k}(:,3),'o','linewidth',1);
-hold off
-xlabel('$E$ ($Td$)','interpreter','latex');
-ylabel('$\alpha_{ex}/N$ ($m^2$)','interpreter','latex');
-h=legend('$1s_5$','$1s_4$','$1s_3$','$1s_2$');
+title('11.55eV','interpreter','latex');
+xlabel('$E$ ($eV$)','interpreter','latex');
+ylabel('$\sigma$ ($m^2$)','interpreter','latex');
+h=legend(lgd);
 set(h,'interpreter','latex','fontsize',20);
 set(gca,'fontsize',20,'ticklabelinterpreter','latex','yscale','log','xscale','log');
+
+idx=1;
+lgd = {};
+E1 = 11.55;
+figure(2)
+for k=1:Nref
+    errorbar(log(W{k}(:,1)-E1),log(W{k}(:,2)),log(1+W{k}(:,3)./W{k}(:,2)),'o','linewidth',1);
+    lgd{idx} = lgs{k};
+    idx = idx+1;
+    hold on
+end
+hold off
+title('11.55eV','interpreter','latex');
+xlabel('$\log(E-E_1)$','interpreter','latex');
+ylabel('$\log(\sigma)$','interpreter','latex');
+h=legend(lgd);
+set(h,'interpreter','latex','fontsize',20);
+set(gca,'fontsize',20,'ticklabelinterpreter','latex');
+
+filename = strcat('./excitation-level1/krig.variogram.model.txt');
+krig_model = importdata(filename);
+filename = strcat('./excitation-level1/krig.variogram.empirical.txt');
+krig_emp = importdata(filename);
+figure(3)
+plot(krig_emp(:,1),krig_emp(:,2),'o','linewidth',2);
+hold on
+plot(krig_model(:,1),krig_model(:,2),'-','linewidth',2);
+hold off
+xlabel('$r$','interpreter','latex');
+ylabel('$E[(Z(x+r)-Z(x))^2]$','interpreter','latex');
+h=legend('Sample','Model');
+set(h,'interpreter','latex','fontsize',20);
+set(gca,'fontsize',20,'ticklabelinterpreter','latex');
+
+filename = strcat('./excitation-level1/crs.krig.txt');
+W_krig = importdata(filename);
+
+idx=1;
+lgd = {};
+figure(4)
+for k=1:Nref
+    errorbar(log(W{k}(:,1)-E1),log(W{k}(:,2)),log(1+W{k}(:,3)./W{k}(:,2)),'o','linewidth',1);
+    lgd{idx} = lgs{k};
+    idx = idx+1;
+    hold on
+end
+plot(W_krig(:,1),W_krig(:,2),'-k','linewidth',2);
+lgd{idx} = 'Kriged prior';
+idx = idx+1;
+patch([W_krig(:,1)' fliplr(W_krig(:,1)')],[W_krig(:,2)'-3*W_krig(:,3)' fliplr(W_krig(:,2)'+3*W_krig(:,3)')],...
+        'b','edgecolor','none');
+alpha(0.1);
+lgd{idx} = '99\% confidence';
+idx = idx+1;
+hold off
+title('11.55eV','interpreter','latex');
+xlabel('$\log(E-E_1)$','interpreter','latex');
+ylabel('$\log(\sigma)$','interpreter','latex');
+h=legend(lgd);
+set(h,'interpreter','latex','fontsize',20);
+set(gca,'fontsize',20,'ticklabelinterpreter','latex');
+xlim([-4 5]);
+
+idx=1;
+lgd = {};
+figure(5)
+for k=1:Nref
+    errorbar(W{k}(:,1),W{k}(:,2),W{k}(:,3),'o','linewidth',1);
+    lgd{idx} = lgs{k};
+    idx = idx+1;
+    hold on
+end
+plot(exp(W_krig(:,1))+E1,exp(W_krig(:,2)),'-k','linewidth',2);
+lgd{idx} = 'Kriged prior';
+idx = idx+1;
+patch([exp(W_krig(:,1)')+E1 fliplr(exp(W_krig(:,1)')+E1)],exp([W_krig(:,2)'-3*W_krig(:,3)' fliplr(W_krig(:,2)'+3*W_krig(:,3)')]),...
+        'b','edgecolor','none');
+alpha(0.1);
+lgd{idx} = '99\% confidence';
+idx = idx+1;
+patch([exp(W_krig(:,1)')+E1 fliplr(exp(W_krig(:,1)')+E1)],exp([W_krig(:,2)'-W_krig(:,3)' fliplr(W_krig(:,2)'+W_krig(:,3)')]),...
+        'r','edgecolor','none');
+alpha(0.1);
+lgd{idx} = '68\% confidence';
+idx = idx+1;
+hold off
+title('11.55eV','interpreter','latex');
+xlabel('$E$ ($eV$)','interpreter','latex');
+ylabel('$\sigma$ ($m^2$)','interpreter','latex');
+h=legend(lgd);
+set(h,'interpreter','latex','fontsize',20);
+set(gca,'fontsize',20,'ticklabelinterpreter','latex','xscale','log','yscale','log');
+axis([1e1 1.5e2 1e-25 1e-20]);
