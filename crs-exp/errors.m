@@ -121,18 +121,19 @@ lgd = {};
 E1 = 11.55;
 figure(2)
 for k=1:Nref
-    errorbar(log(W{k}(:,1)-E1),log(W{k}(:,2)),log(1+W{k}(:,3)./W{k}(:,2)),'o','linewidth',1);
+%     errorbar(log(W{k}(:,1)-E1),log(W{k}(:,2)),log(1+W{k}(:,3)./W{k}(:,2)),'o','linewidth',1);
+    errorbar(W{k}(:,1)-E1,W{k}(:,2),W{k}(:,3),'o','linewidth',1);
     lgd{idx} = lgs{k};
     idx = idx+1;
     hold on
 end
 hold off
 title('11.55eV','interpreter','latex');
-xlabel('$\log(E-E_1)$','interpreter','latex');
-ylabel('$\log(\sigma)$','interpreter','latex');
+xlabel('$\epsilon-\epsilon_1$ ($eV$)','interpreter','latex');
+ylabel('$\sigma$ ($m^2$)','interpreter','latex');
 h=legend(lgd);
 set(h,'interpreter','latex','fontsize',20);
-set(gca,'fontsize',20,'ticklabelinterpreter','latex');
+set(gca,'XScale','log','YScale','log','fontsize',20,'ticklabelinterpreter','latex');
 
 filename = strcat('./excitation-level1/krig.variogram.model.txt');
 krig_model = importdata(filename);
