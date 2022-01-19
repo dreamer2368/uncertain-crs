@@ -1,5 +1,7 @@
 import numpy as np
 
+MaxPoints = 1000
+
 typeDictS2I = {"Electric field / N (Td)":               0,
                "Grid type":                             1,
                "Maximum energy":                        2,
@@ -56,12 +58,20 @@ def readNumber(str):
     return x
 
 class singleOutput:
-    data = np.zeros((1,2))
+    data = []
     inputName = ''
     outputName = ''
     species = ''
     collisionType = ''
     deltaE = 0.
+
+    def __init__(self):
+        self.data = []
+        self.inputName = ''
+        self.outputName = ''
+        self.species = ''
+        self.collisionType = ''
+        self.deltaE = 0.
 
     def printToScreen(self):
         print("{0:s}\t{1:s}\t{2:.6e}".format(self.species,self.collisionType,self.deltaE))
@@ -150,14 +160,16 @@ class bolsigOutput:
                         self.outputs[dataType].collisionType = inputCollision
                         self.outputs[dataType].deltaE = inputE
 
+                    tempData = np.zeros([MaxPoints,2])
+                    pt = 0
                     # Once we find numbers, read until we don't find a number
                     tmp = fp.readline().strip()
                     while (not (tmp=='') and tmp[0].isdigit()):
                         d = tmp.split()
-                        self.outputs[dataType].data = \
-                            np.append(self.outputs[dataType].data,
-                                      [[readNumber(d[0]), readNumber(d[1])]], axis=0)
+                        tempData[pt,:] = [readNumber(d[0]), readNumber(d[1])]
+                        pt += 1
                         tmp = fp.readline().strip()
+                    self.outputs[dataType].data = tempData[:pt,:]
 
                     self.outputs[dataType].printToScreen
                     nOutputs += 1

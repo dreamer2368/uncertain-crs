@@ -1,8 +1,10 @@
 import numpy as np
 import crossSections as cross
 from swarmParameters import bolsigOutput
-from swarmData import swarmDatasets
+from swarmData import kB, Td
 from models import elastic_MERT
+
+inputList = ["AlAminLucas1987","MilloyCrompton1977","NakamuraKurachi1988"]
 
 # datasets
 datasets = ["Biagi"]
@@ -44,7 +46,7 @@ def RunBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False):
         raise RuntimeError("Failed to find input/output data directories.")
 
     bolsigOutputs = []
-    for swarmdataset in swarmDatasets:
+    for swarmdataset in inputList:
         inputFilename = "%s/input/input-%s.dat" % (dataDir, swarmdataset)
         command = "%s/bolsigminus %s" %(rootDir, inputFilename)
 
@@ -66,3 +68,19 @@ def RunBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False):
         return bolsigOutputs, times
     else:
         return bolsigOutputs
+
+def ConvertBolsigData(expDataset, bolsigData):
+    bolsigVariables = {}
+
+    for var in expDataset.variables:
+        if ( (var == 'E/N') or (var[-4:] == '-rms') or (var[-4:] == '-max') ): continue
+
+        # for index, refer to typeDictI2S in swarmParameters.py
+        if ( var == 'W' ):
+            bolsigVariables.update({var: bolsigData.outputs[4].data[:,0] / Td * bolsigData.outputs[4].data[:,1]})
+        elif ( var == 'DT/mu' ):
+            bolsigVariables.update({var: bolsigData.outputs[5].data[:,1] / bolsigData.outputs[4].data[:,1]})
+        elif ( var == 'DLN' ):
+            bolsigVariables.update({var: bolsigData.outputs[18].data[:,1]})
+
+    return bolsigVariables

@@ -36,6 +36,11 @@ class singleData:
     variables = []
     Nvar = 0
 
+    def __init__(self):
+        self.data = [[]]
+        self.variables = []
+        self.Nvar = 0
+
     # def printToScreen(self):
     #     print("{0:s}\t{1:s}".format(self.inputName,self.outputName))
     #     for k in range(self.data.shape[0]):

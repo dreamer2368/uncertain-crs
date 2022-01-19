@@ -29,10 +29,13 @@ def readNumber(str):
 #         return
 
 class singleData:
-    # data = [[]]
     variables = {}
     Nvar = 0
     parameters = {}
+
+    def __init__(self):
+        self.parameters = {}
+        self.variables = {}
 
     # def printToScreen(self):
     #     print("{0:s}\t{1:s}".format(self.inputName,self.outputName))
@@ -49,9 +52,10 @@ class swarmData:
         """Initialize by reading BOLSIG output file."""
         self.ref = ''
         self.datasets = []
-        Ndatasets = 0
-        variables = {}
+        self.Ndatasets = 0
+        self.variables = {}
         self.parseData(filename)
+        self.ConvertData()
 
     def parseData(self, filename):
         """Read swarm data files."""
