@@ -1,0 +1,40 @@
+Reference
+Gibson, J. C., Gulley, R. J., Sullivan, J. P., Buckman, S. J., Chan, V., & Burrow, P. D. (1996). Elastic electron scattering from argon at low incident energies. Journal of Physics B: Atomic, Molecular and Optical Physics, 29(14), 3177–3195. https://doi.org/10.1088/0953-4075/29/14/025
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E         eV          n/a     n/a
+crs       m2          n/a     n/a
+*********************************
+
+Data
+############################
+Elastic, integral
+############################
+E     crs
+=============================
+1.0   1.49E-20
+1.5   2.36E-20
+2.0   3.41E-20
+3.0   5.25E-20
+4.0   8.46E-20
+5.0   9.74E-20
+7.5   14.97E-20
+10.0  20.66E-20
+=============================
+
+Data
+############################
+Elastic, momentum
+############################
+E     crs
+=============================
+1.0   1.51E-20
+1.5   2.07E-20
+2.0   2.78E-20
+3.0   4.15E-20
+4.0   6.80E-20
+5.0   8.73E-20
+7.5   13.22E-20
+10.0  17.85E-20
+=============================

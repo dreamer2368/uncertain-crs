@@ -1,0 +1,31 @@
+Reference
+Mielewska, B., Linert, I., King, G. C., & Zubek, M. (2004). Differential cross sections for elastic electron scattering in argon over the angular range 130°-180°. Physical Review A - Atomic, Molecular, and Optical Physics, 69(6), 1–8. https://doi.org/10.1103/PhysRevA.69.062716
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E         eV          n/a     n/a
+crs       m2          n/a     n/a
+crs-max   m2          n/a     n/a
+*********************************
+
+Data
+############################
+Elastic, integral
+############################
+E    crs    crs-max
+=============================
+5     9.10E-20    0.72E-20
+7.5   14.1E-20    1.2E-20
+10    18.4E-20    1.6E-20
+=============================
+
+Data
+############################
+Elastic, momentum
+############################
+E    crs    crs-max
+=============================
+5     7.43E-20    0.68E-20
+7.5   11.7E-20    1.3E-20
+10    12.9E-20    1.5E-20
+=============================
