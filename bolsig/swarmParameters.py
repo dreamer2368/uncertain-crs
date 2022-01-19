@@ -74,13 +74,13 @@ class bolsigOutput:
     options = {}
     outputs = {}
 
-    def __init__(self, filename):
+    def __init__(self, filename, verbose=False):
         """Initialize by reading BOLSIG output file."""
         self.options = {}
         self.outputs = {}
-        self.parseOutputFile(filename)
+        self.parseOutputFile(filename, verbose)
 
-    def parseOutputFile(self, filename):
+    def parseOutputFile(self, filename, verbose=False):
         """Read output file of BOLSIG."""
 
         with open(filename,'r') as fp:
@@ -88,7 +88,7 @@ class bolsigOutput:
             line = fp.readline().strip()
             # Skip the BOLSIG version and collision input data.
             while (not (line=='') and line[0] != ' '):
-                print(line)
+                if (verbose): print(line)
                 line = fp.readline().strip()
 
             # Read until we find condition table.
@@ -97,7 +97,7 @@ class bolsigOutput:
 
             # Read conditions and store them in dictionaries. Omit this functionality for now.
             while (not (line=='') and line[0] != ' '):
-                print(line)
+                if (verbose): print(line)
                 line = fp.readline().strip()
 
             # Read tables one by one.
@@ -164,8 +164,9 @@ class bolsigOutput:
 
                 line = fp.readline()
 
-            for c in self.outputs:
-                self.outputs[c].printToScreen()
+            if (verbose):
+                for c in self.outputs:
+                    self.outputs[c].printToScreen()
         return
 
 
