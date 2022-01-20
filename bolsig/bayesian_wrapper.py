@@ -153,21 +153,27 @@ if __name__ == "__main__":
             sys.exit(0)
 
         np.random.seed(42)
-        nwalkers = 14
+        nwalkers = 21
         theta_ref = np.array([-1.489, 65.0, -82.9, 0.881])
         ndim = len(theta_ref)
         pos = theta_ref * (1.0 + 0.1 * np.random.randn(nwalkers,ndim) )
 
+        filename = "./bayesian-bolsig/test.h5"
+        backend = emcee.backends.HDFBackend(filename)
+        #backend.reset(nwalkers, ndim)
+
         sampler = emcee.EnsembleSampler(
-            nwalkers, ndim, log_posterior, pool=pool
+            nwalkers, ndim, log_posterior, pool=pool, backend=backend
         )
-        sampler.run_mcmc(pos, 1500, progress=True);
+        #sampler.run_mcmc(pos, 5000, progress=True);
+        sampler.run_mcmc(None, 1, progress=True);
+    
+    tau = sampler.get_autocorr_time(tol=0)
 
-    tau = sampler.get_autocorr_time()
     print(tau)
-    maxtau = np.amax(tau)
+    discard, thin = int(np.max(tau)*2), int(0.5*np.min(tau))
 
-    flat_samples = sampler.get_chain(discard=2*maxtau, thin=int(maxtau/2), flat=True)
+    flat_samples = sampler.get_chain(discard=discard, thin=thin, flat=True)
     print(flat_samples.shape)
 
     flat_samples.tofile('./bayesian-bolsig/posterior_sample.dat')
