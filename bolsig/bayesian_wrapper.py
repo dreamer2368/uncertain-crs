@@ -38,7 +38,7 @@ def generateCrossSection(theta,filename=None):
         targetcrs.writeLXCatFile(filename)
     return targetcrs
 
-def runBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False):
+def runBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False, rank=None):
     from os.path import exists, isdir
     import subprocess
 
@@ -46,7 +46,10 @@ def runBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False):
         from time import perf_counter
         times = np.zeros((2,))
 
-    if (not exists(rootDir + "/bolsigminus")):
+    exe = 'bolsigminus-linux'
+    if (rank is not None): exe += str(rank)
+
+    if (not exists(rootDir + "/" + exe)):
         raise RuntimeError("Failed to find bolsigminus.")
     if (not (isdir(dataDir) and isdir(dataDir+"/input") and isdir(dataDir+"/output"))):
         raise RuntimeError("Failed to find input/output data directories.")
@@ -54,7 +57,7 @@ def runBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False):
     bolsigOutputs = []
     for swarmdataset in inputList:
         inputFilename = "%s/input/input-%s.dat" % (dataDir, swarmdataset)
-        command = "%s/bolsigminus %s" %(rootDir, inputFilename)
+        command = "%s/%s %s" %(rootDir, exe, inputFilename)
 
         if (check_time): tic = perf_counter()
         subprocess.check_call(command,shell=True)
@@ -111,7 +114,7 @@ def log_likelihood_parallel(theta):
         outputFilename = "%s/%d/output/output-%s.dat" % (bdir, rank, exp)
         writeInputFile(inputFilename, expConfigs[exp], crsFilename, outputFilename)
 
-    outputs = runBolsig(dataDir="./bayesian-bolsig/%d" % rank)
+    outputs = runBolsig(dataDir="./bayesian-bolsig/%d" % rank, rank=rank)
 
     lk = 0.0
     for k, expData in enumerate(expDatasets): # per each experiment
@@ -153,29 +156,31 @@ if __name__ == "__main__":
             sys.exit(0)
 
         np.random.seed(42)
-        nwalkers = 21
+        nwalkers = 14
+
         theta_ref = np.array([-1.489, 65.0, -82.9, 0.881])
         ndim = len(theta_ref)
         pos = theta_ref * (1.0 + 0.1 * np.random.randn(nwalkers,ndim) )
 
-        filename = "./bayesian-bolsig/test.h5"
+        filename = "./bayesian-bolsig/elastic.h5"
         backend = emcee.backends.HDFBackend(filename)
         #backend.reset(nwalkers, ndim)
 
         sampler = emcee.EnsembleSampler(
             nwalkers, ndim, log_posterior, pool=pool, backend=backend
         )
-        #sampler.run_mcmc(pos, 5000, progress=True);
-        sampler.run_mcmc(None, 1, progress=True);
+        #sampler.run_mcmc(pos, 5000);
+        sampler.run_mcmc(None, 2800);
     
     tau = sampler.get_autocorr_time(tol=0)
 
     print(tau)
     discard, thin = int(np.max(tau)*2), int(0.5*np.min(tau))
 
-    flat_samples = sampler.get_chain(discard=discard, thin=thin, flat=True)
-    print(flat_samples.shape)
+    if ( (not np.isnan(discard) and (not np.isnan(thin) ):
+        flat_samples = sampler.get_chain(discard=discard, thin=thin, flat=True)
+        print(flat_samples.shape)
 
-    flat_samples.tofile('./bayesian-bolsig/posterior_sample.dat')
+        flat_samples.tofile('./bayesian-bolsig/posterior_sample.dat')
 
     print("all is done.")
