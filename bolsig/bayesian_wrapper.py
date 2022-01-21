@@ -46,7 +46,7 @@ def runBolsig(rootDir=".", dataDir=".", verbose=False, check_time=False, rank=No
         from time import perf_counter
         times = np.zeros((2,))
 
-    exe = 'bolsigminus-linux'
+    exe = 'bolsigminus'
     if (rank is not None): exe += str(rank)
 
     if (not exists(rootDir + "/" + exe)):
@@ -114,7 +114,7 @@ def log_likelihood_parallel(theta):
         outputFilename = "%s/%d/output/output-%s.dat" % (bdir, rank, exp)
         writeInputFile(inputFilename, expConfigs[exp], crsFilename, outputFilename)
 
-    outputs = runBolsig(dataDir="./bayesian-bolsig/%d" % rank, rank=rank)
+    outputs = runBolsig(dataDir="./bayesian-bolsig/%d" % rank)
 
     lk = 0.0
     for k, expData in enumerate(expDatasets): # per each experiment
@@ -169,15 +169,18 @@ if __name__ == "__main__":
         sampler = emcee.EnsembleSampler(
             nwalkers, ndim, log_posterior, pool=pool, backend=backend
         )
-        #sampler.run_mcmc(pos, 5000);
-        sampler.run_mcmc(None, 2800);
-    
-    tau = sampler.get_autocorr_time(tol=0)
+        from time import perf_counter
+        for k in range(24):
+            tic = perf_counter()
+            #sampler.run_mcmc(pos, 5000);
+            sampler.run_mcmc(None, 100);  
+            tau = sampler.get_autocorr_time(tol=0)
+            toc = perf_counter()
+            print(k,': ',tau,' - ',toc-tic)
 
-    print(tau)
     discard, thin = int(np.max(tau)*2), int(0.5*np.min(tau))
 
-    if ( (not np.isnan(discard) and (not np.isnan(thin) ):
+    if ( (not np.isnan(discard)) and (not np.isnan(thin)) ):
         flat_samples = sampler.get_chain(discard=discard, thin=thin, flat=True)
         print(flat_samples.shape)
 

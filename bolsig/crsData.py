@@ -59,6 +59,7 @@ class crsData:
         self.Nsets = 0
         self.variables = {}
         self.parseData(filename)
+        self.convertData()
 
     def parseData(self, filename):
         """Read crs data files."""
@@ -112,6 +113,34 @@ class crsData:
 
             # for c in self.outputs:
             #     self.outputs[c].printToScreen()
+        return
+
+    def convertData(self):
+
+        for dataType, dataset in self.datasets.items():
+            temp = np.copy(dataset.data)
+            var1 = dataset.variables[1]
+
+            if ( self.variables[var1][0] == 'cm2' ):
+                temp[:,1] *= 1e-4
+
+            if ( self.variables[var1][1]!='n/a' ):
+                error = temp[:,1][...,None] * 1e-2 * readNumber(self.variables[var1][1][:-1])
+                temp = np.append( temp, error, axis=1)
+            elif (self.variables[var1][2]!='n/a'):
+                error = temp[:,1][...,None] * 1e-2 / 3.0 * readNumber(self.variables[var1][2][:-1])
+                temp = np.append( temp, error, axis=1)
+            else:
+                var2 = dataset.variables[2]
+                if ( self.variables[var2][0] == '%' ):
+                    temp[:,2] *= 1e-2 * temp[:,1]
+                elif ( self.variables[var2][0] == 'cm2' ):
+                    temp[:,2] *= 1e-4
+                if ( var2[-3:] == 'max' ):
+                    temp[:,2] *= 1.0 / 3.0
+
+            self.datasets[dataType].data = np.copy(temp)
+
         return
 
 
