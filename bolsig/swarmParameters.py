@@ -24,28 +24,31 @@ typeDictS2I = {"Electric field / N (Td)":               0,
                "Bulk mobility *N (1/m/V/s)":            19,
                "Bulk T diffusion coef. *N (1/m/s)":     20,
                "Bulk L diffusion coef. *N (1/m/s)":     21 }
-typeDictI2S = {0: "Electric field / N (Td)",
-               1: "Grid type",
-               2: "Maximum energy",
-               3: "Mean energy (eV)",
-               4: "Mobility *N (1/m/V/s)",
-               5: "Diffusion coefficient *N (1/m/s)",
-               6: "Energy mobility *N (1/m/V/s)",
-               7: "Energy diffusion coef. D*N (1/m/s)",
-               8: "Total collision freq. /N (m3/s)",
-               8: "Momentum frequency /N (m3/s)",
-               10: "Total ionization freq. /N (m3/s)",
-               11: "Townsend ioniz. coef. alpha/N (m2)",
-               12: "Power /N (eV m3/s)",
-               13: "Elastic power loss /N (eV m3/s)",
-               14: "Inelastic power loss /N (eV m3/s)",
-               15: "Growth power /N (eV m3/s)",
-               16: "# of iterations",
-               17: "# of grid trials",
-               18: "Longitud. diffusion coef. *N (1/m/s)",
-               19: "Bulk mobility *N (1/m/V/s)",
-               20: "Bulk T diffusion coef. *N (1/m/s)",
-               21: "Bulk L diffusion coef. *N (1/m/s)" }
+typeDictI2S = {}
+for key, value in typeDictS2I.items():
+    typeDictI2S.update({value: key})
+# typeDictI2S = {0: "Electric field / N (Td)",
+#                1: "Grid type",
+#                2: "Maximum energy",
+#                3: "Mean energy (eV)",
+#                4: "Mobility *N (1/m/V/s)",
+#                5: "Diffusion coefficient *N (1/m/s)",
+#                6: "Energy mobility *N (1/m/V/s)",
+#                7: "Energy diffusion coef. D*N (1/m/s)",
+#                8: "Total collision freq. /N (m3/s)",
+#                8: "Momentum frequency /N (m3/s)",
+#                10: "Total ionization freq. /N (m3/s)",
+#                11: "Townsend ioniz. coef. alpha/N (m2)",
+#                12: "Power /N (eV m3/s)",
+#                13: "Elastic power loss /N (eV m3/s)",
+#                14: "Inelastic power loss /N (eV m3/s)",
+#                15: "Growth power /N (eV m3/s)",
+#                16: "# of iterations",
+#                17: "# of grid trials",
+#                18: "Longitud. diffusion coef. *N (1/m/s)",
+#                19: "Bulk mobility *N (1/m/V/s)",
+#                20: "Bulk T diffusion coef. *N (1/m/s)",
+#                21: "Bulk L diffusion coef. *N (1/m/s)" }
 
 def readNumber(str):
     try:
@@ -88,6 +91,8 @@ class bolsigOutput:
         """Initialize by reading BOLSIG output file."""
         self.options = {}
         self.outputs = {}
+        self.typeDictS2I = typeDictS2I
+        self.typeDictI2S = typeDictI2S
         self.parseOutputFile(filename, verbose)
 
     def parseOutputFile(self, filename, verbose=False):
@@ -144,11 +149,11 @@ class bolsigOutput:
                         left, right = line.split('\t')
                         tmpDataTypeString = right.strip()
 
-                    if tmpDataTypeString not in typeDictS2I:
-                        nDict = len(typeDictS2I)
-                        typeDictS2I[tmpDataTypeString] = nDict
-                        typeDictI2S[nDict] = tmpDataTypeString
-                    dataType = typeDictS2I[tmpDataTypeString]
+                    if tmpDataTypeString not in self.typeDictS2I:
+                        nDict = len(self.typeDictS2I)
+                        self.typeDictS2I[tmpDataTypeString] = nDict
+                        self.typeDictI2S[nDict] = tmpDataTypeString
+                    dataType = self.typeDictS2I[tmpDataTypeString]
 
                     if dataType in self.outputs:
                         print("Warning: output '%s' already exists and will be overwritten." % typeDictI2S[dataType])

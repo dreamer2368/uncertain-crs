@@ -22,6 +22,7 @@ for k = [4,6,7,8]
         filename = strcat('./W.',refs{k},'.293.txt');
         W{idx} = importdata(filename);
         lgs{idx} = strcat(refs{k},'-293K');
+        idx1 = idx;
         idx = idx+1;
         filename = strcat('./W.',refs{k},'.90.txt');
         W{idx} = importdata(filename);
@@ -33,7 +34,11 @@ end
 NW = length(W);
 figure(1)
 for k=1:NW
-    errorbar(W{k}(:,1),W{k}(:,2),W{k}(:,3),'o','linewidth',1);
+    if(k==idx1)
+        errorbar(W{k}(:,1),W{k}(:,2),W{k}(:,3),'o','linewidth',1,'markersize',50);
+    else
+        errorbar(W{k}(:,1),W{k}(:,2),W{k}(:,3),'o','linewidth',1);
+    end
     hold on
 end
 hold off

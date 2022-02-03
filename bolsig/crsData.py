@@ -3,11 +3,21 @@ import numpy as np
 typeDictS2I = {"Excitation, level 1":                   0,
                "Excitation, level 2":                   1,
                "Excitation, level 3":                   2,
-               "Excitation, level 4":                   3}
-typeDictI2S = {0: "Excitation, level 1",
-               1: "Excitation, level 2",
-               2: "Excitation, level 3",
-               3: "Excitation, level 4" }
+               "Excitation, level 4":                   3,
+               "Ionization, 1+":                        4,
+               "Ionization, total":                     5,
+               "Ionization, 2+":                        6,
+               "Ionization, 3+":                        7,
+               "Ionization, 4+":                        8,
+               "Elastic, integral":                     9,
+               "Elastic, momentum":                     10}
+typeDictI2S = {}
+for key, value in typeDictS2I.items():
+    typeDictI2S.update({value: key})
+# typeDictI2S = {0: "Excitation, level 1",
+#                1: "Excitation, level 2",
+#                2: "Excitation, level 3",
+#                3: "Excitation, level 4" }
 
 def readNumber(str):
     try:
@@ -35,11 +45,13 @@ class singleData:
     data = [[]]
     variables = []
     Nvar = 0
+    error_provided = False
 
     def __init__(self):
         self.data = [[]]
         self.variables = []
         self.Nvar = 0
+        error_provided = False
 
     # def printToScreen(self):
     #     print("{0:s}\t{1:s}".format(self.inputName,self.outputName))
@@ -120,6 +132,7 @@ class crsData:
         for dataType, dataset in self.datasets.items():
             temp = np.copy(dataset.data)
             var1 = dataset.variables[1]
+            dataset.error_provided = True
 
             if ( self.variables[var1][0] == 'cm2' ):
                 temp[:,1] *= 1e-4
@@ -130,7 +143,7 @@ class crsData:
             elif (self.variables[var1][2]!='n/a'):
                 error = temp[:,1][...,None] * 1e-2 / 3.0 * readNumber(self.variables[var1][2][:-1])
                 temp = np.append( temp, error, axis=1)
-            else:
+            elif (len(dataset.variables)>2):
                 var2 = dataset.variables[2]
                 if ( self.variables[var2][0] == '%' ):
                     temp[:,2] *= 1e-2 * temp[:,1]
@@ -138,6 +151,10 @@ class crsData:
                     temp[:,2] *= 1e-4
                 if ( var2[-3:] == 'max' ):
                     temp[:,2] *= 1.0 / 3.0
+            else:
+                error = temp[:,1][...,None] * 0.5
+                temp = np.append( temp, error, axis=1)
+                dataset.error_provided = False
 
             self.datasets[dataType].data = np.copy(temp)
 
