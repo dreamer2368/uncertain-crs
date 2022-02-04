@@ -13,6 +13,8 @@ overview.pdf
 *.snm
 *.flc
 bolsig/*
+!bolsig/*.flux
+!bolsig/*.sh
 !bolsig/*.py
 !bolsig/*.ipynb
 crs-exp/crs.*.txt

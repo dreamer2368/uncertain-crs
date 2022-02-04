@@ -175,10 +175,12 @@ def depositBolsigSamples(nSample, rootDir="."):
         else:
             nPoints = lxcatConfigs[config]['RUNSERIES'][3]
             rate = [ np.zeros([nSample,nPoints]) ] * 5
+            mu = np.zeros([nSample,nPoints])
             # tags = ['C2','C3','C4','C5','C33']
             for k in range(nSample):
                 outputFilename = "%s/output/%s.%d.dat" % (rootDir, config, k)
                 output = bolsigOutput(outputFilename)
+                mu[k,:] = output.outputs[4].data[:,1]
                 for idx, table in output.outputs.items():
                     if( (table.collisionType=='Ionization') and (table.deltaE>15.7) and (table.deltaE<15.8) ):
                         rate[-1][k,:] = np.copy(table.data[:,1])
@@ -192,6 +194,10 @@ def depositBolsigSamples(nSample, rootDir="."):
                         rate[3][k,:] = np.copy(table.data[:,1])
 
                 # print(tag,': ',dataType, '- ', output.outputs[dataType].deltaE)
+            dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
+            fID = open(dataFilename,'w+b')
+            mu.tofile(fID)
+            fID.close()
             dataFilename = '%s/data/%s.ion.dat' % (rootDir,config)
             fID = open(dataFilename,'w+b')
             rate[-1].tofile(fID)
@@ -216,8 +222,7 @@ def depositBolsigSamples(nSample, rootDir="."):
     return
 
 if __name__ == "__main__":
-    # sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=2)
-    # setupInputFiles(2,rootDir='./forward-propagate')
-    depositBolsigSamples(2, rootDir='./forward-propagate')
-    result = np.fromfile('./forward-propagate/data/rate300K.1s2.dat')
-    print(result)
+    nSample=72
+    #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=nSample)
+    setupInputFiles(nSample,rootDir='./forward-propagate')
+    #depositBolsigSamples(2, rootDir='./forward-propagate')
