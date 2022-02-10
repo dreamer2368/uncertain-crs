@@ -67,18 +67,18 @@ def generateCrossSection(inputs):
         elif ((c.colType==3)):
             targetcrs.crs[k].data = crs_ion
             targetcrs.crs[k].deltaE = models.E_ion[0]
-        elif ((c.colType==2) and (c.deltaE > threshold[0]) and (c.deltaE < threshold[1])):
-            targetcrs.crs[k].data = crs_ext[0]
-            targetcrs.crs[k].deltaE = models.E_ext[0]
-        elif ((c.colType==2) and (c.deltaE > threshold[1]) and (c.deltaE < threshold[2])):
-            targetcrs.crs[k].data = crs_ext[1]
-            targetcrs.crs[k].deltaE = models.E_ext[1]
-        elif ((c.colType==2) and (c.deltaE > threshold[2]) and (c.deltaE < threshold[3])):
-            targetcrs.crs[k].data = crs_ext[2]
-            targetcrs.crs[k].deltaE = models.E_ext[2]
-        elif ((c.colType==2) and (c.deltaE > threshold[3]) and (c.deltaE < threshold[3] + 0.1)):
-            targetcrs.crs[k].data = crs_ext[3]
-            targetcrs.crs[k].deltaE = models.E_ext[3]
+        # elif ((c.colType==2) and (c.deltaE > threshold[0]) and (c.deltaE < threshold[1])):
+        #     targetcrs.crs[k].data = crs_ext[0]
+        #     targetcrs.crs[k].deltaE = models.E_ext[0]
+        # elif ((c.colType==2) and (c.deltaE > threshold[1]) and (c.deltaE < threshold[2])):
+        #     targetcrs.crs[k].data = crs_ext[1]
+        #     targetcrs.crs[k].deltaE = models.E_ext[1]
+        # elif ((c.colType==2) and (c.deltaE > threshold[2]) and (c.deltaE < threshold[3])):
+        #     targetcrs.crs[k].data = crs_ext[2]
+        #     targetcrs.crs[k].deltaE = models.E_ext[2]
+        # elif ((c.colType==2) and (c.deltaE > threshold[3]) and (c.deltaE < threshold[3] + 0.1)):
+        #     targetcrs.crs[k].data = crs_ext[3]
+        #     targetcrs.crs[k].deltaE = models.E_ext[3]
 
     if (filename is not None):
         targetcrs.writeLXCatFile(filename)
@@ -161,20 +161,20 @@ def depositBolsigSamples(nSample, rootDir="."):
                 DT[k,:] = output.outputs[5].data[:,1]
                 DL[k,:] = output.outputs[18].data[:,1]
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
+            fID = open(dataFilename,'a+b')
             mu.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.DTN.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
+            fID = open(dataFilename,'a+b')
             DT.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.DLN.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
+            fID = open(dataFilename,'a+b')
             DL.tofile(fID)
             fID.close()
         else:
             nPoints = lxcatConfigs[config]['RUNSERIES'][3]
-            rate = [ np.zeros([nSample,nPoints]) ] * 5
+            rate1s5, rate1s4, rate1s3, rate1s2, rateIon = np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             # tags = ['C2','C3','C4','C5','C33']
             for k in range(nSample):
@@ -183,40 +183,59 @@ def depositBolsigSamples(nSample, rootDir="."):
                 mu[k,:] = output.outputs[4].data[:,1]
                 for idx, table in output.outputs.items():
                     if( (table.collisionType=='Ionization') and (table.deltaE>15.7) and (table.deltaE<15.8) ):
-                        rate[-1][k,:] = np.copy(table.data[:,1])
+                        # print (table.collisionType)
+                        # print (table.data[:,1])
+                        # print( "before-rate0", rate[0][k,:])
+                        # print( "before-rate-1", rate[-1][k,:])
+                        # rate[-1][k,:] = table.data[:,1]
+                        rateIon[k,:] = table.data[:,1]
+                        # print( "after-rate0", rate[0][k,:])
+                        # print( "after-rate-1", rate[-1][k,:])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.5) and (table.deltaE<11.6) ):
-                        rate[0][k,:] = np.copy(table.data[:,1])
+                        # print (table.collisionType)
+                        # print (table.data[:,1])
+                        # print( "before-rate0", (rate[0])[k,:])
+                        # print( "before-rate-1", (rate[-1])[k,:])
+                        # (rate[0])[k,:] = np.copy(table.data[:,1])
+                        rate1s5[k,:] = np.copy(table.data[:,1])
+                        # print( "after-rate0", (rate[0])[k,:])
+                        # print( "after-rate-1", (rate[-1])[k,:])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.6) and (table.deltaE<11.7) ):
-                        rate[1][k,:] = np.copy(table.data[:,1])
+                        # rate[1][k,:] = np.copy(table.data[:,1])
+                        rate1s4[k,:] = np.copy(table.data[:,1])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.7) and (table.deltaE<11.8) ):
-                        rate[2][k,:] = np.copy(table.data[:,1])
+                        # rate[2][k,:] = np.copy(table.data[:,1])
+                        rate1s3[k,:] = np.copy(table.data[:,1])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
-                        rate[3][k,:] = np.copy(table.data[:,1])
+                        # rate[3][k,:] = np.copy(table.data[:,1])
+                        rate1s2[k,:] = np.copy(table.data[:,1])
 
                 # print(tag,': ',dataType, '- ', output.outputs[dataType].deltaE)
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
+            fID = open(dataFilename,'a+b')
             mu.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.ion.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
-            rate[-1].tofile(fID)
+            fID = open(dataFilename,'a+b')
+            print("rate-1", rateIon)
+            rateIon.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s5.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
-            rate[0].tofile(fID)
+            fID = open(dataFilename,'a+b')
+            print("rate0", rate1s5)
+            rate1s5.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s4.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
-            rate[1].tofile(fID)
+            fID = open(dataFilename,'a+b')
+            rate1s4.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s3.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
-            rate[2].tofile(fID)
+            fID = open(dataFilename,'a+b')
+            rate1s3.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s2.dat' % (rootDir,config)
-            fID = open(dataFilename,'w+b')
-            rate[3].tofile(fID)
+            fID = open(dataFilename,'a+b')
+            rate1s2.tofile(fID)
             fID.close()
 
     return
@@ -224,5 +243,5 @@ def depositBolsigSamples(nSample, rootDir="."):
 if __name__ == "__main__":
     nSample=72
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=nSample)
-    setupInputFiles(nSample,rootDir='./forward-propagate')
-    #depositBolsigSamples(2, rootDir='./forward-propagate')
+    # setupInputFiles(nSample,rootDir='./forward-propagate')
+    depositBolsigSamples(1, rootDir='./forward-propagate')

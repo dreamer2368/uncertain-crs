@@ -39,7 +39,7 @@ transport90K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
 
 rate300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
              'CONDITIONS': [10., 0., 0., 300., 300., 0., 0., 1.0E18, 1., 1., 1, 1, 4, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, 1.0, 1],
-             'RUNSERIES': [1, 1.0e0, 500., 40, 3],
+             'RUNSERIES': [1, 1.0e0, 5.e2, 40, 3],
              'SAVERESULTS': ['"transport.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
              }
 
@@ -59,7 +59,7 @@ def writeInputFile(inputFilename, expConfig, crsFile=None, outputFile=None, nosc
 
     for key in order:
         if key not in expConfig: continue
-        
+
         if ( (key == 'READCOLLISIONS') and (crsFile is not None) ):
             crsFile = '"' + crsFile + '"'
             expConfig[key][0] = crsFile
