@@ -183,46 +183,26 @@ def depositBolsigSamples(nSample, rootDir="."):
                 mu[k,:] = output.outputs[4].data[:,1]
                 for idx, table in output.outputs.items():
                     if( (table.collisionType=='Ionization') and (table.deltaE>15.7) and (table.deltaE<15.8) ):
-                        # print (table.collisionType)
-                        # print (table.data[:,1])
-                        # print( "before-rate0", rate[0][k,:])
-                        # print( "before-rate-1", rate[-1][k,:])
-                        # rate[-1][k,:] = table.data[:,1]
                         rateIon[k,:] = table.data[:,1]
-                        # print( "after-rate0", rate[0][k,:])
-                        # print( "after-rate-1", rate[-1][k,:])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.5) and (table.deltaE<11.6) ):
-                        # print (table.collisionType)
-                        # print (table.data[:,1])
-                        # print( "before-rate0", (rate[0])[k,:])
-                        # print( "before-rate-1", (rate[-1])[k,:])
-                        # (rate[0])[k,:] = np.copy(table.data[:,1])
                         rate1s5[k,:] = np.copy(table.data[:,1])
-                        # print( "after-rate0", (rate[0])[k,:])
-                        # print( "after-rate-1", (rate[-1])[k,:])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.6) and (table.deltaE<11.7) ):
-                        # rate[1][k,:] = np.copy(table.data[:,1])
                         rate1s4[k,:] = np.copy(table.data[:,1])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.7) and (table.deltaE<11.8) ):
-                        # rate[2][k,:] = np.copy(table.data[:,1])
                         rate1s3[k,:] = np.copy(table.data[:,1])
                     elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
-                        # rate[3][k,:] = np.copy(table.data[:,1])
                         rate1s2[k,:] = np.copy(table.data[:,1])
 
-                # print(tag,': ',dataType, '- ', output.outputs[dataType].deltaE)
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
             fID = open(dataFilename,'a+b')
             mu.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.ion.dat' % (rootDir,config)
             fID = open(dataFilename,'a+b')
-            print("rate-1", rateIon)
             rateIon.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s5.dat' % (rootDir,config)
             fID = open(dataFilename,'a+b')
-            print("rate0", rate1s5)
             rate1s5.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.1s4.dat' % (rootDir,config)
@@ -244,4 +224,4 @@ if __name__ == "__main__":
     nSample=72
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=nSample)
     # setupInputFiles(nSample,rootDir='./forward-propagate')
-    depositBolsigSamples(1, rootDir='./forward-propagate')
+    depositBolsigSamples(nSample, rootDir='./forward-propagate')
