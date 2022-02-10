@@ -4,7 +4,10 @@ MaxPoints = 1000
 kB, Td = 1.38064852e-23, 1.0e21
 
 # datasets
-swarmDatasets = ["AlAminLucas1987","MilloyCrompton1977","NakamuraKurachi1988"]
+swarmDatasets = ["AlAminLucas1987","MilloyCrompton1977","NakamuraKurachi1988",
+                 "KucukarpaciLucas1981","PackPhelps1961","Robertson1977",
+                 "RobertsonRee1972","WarrenParker1962","TownsendBailey1922",
+                 "GoldenFisher1961","Kruithof1940","Specht1980","Tachibana1986"]
 
 def readNumber(str):
     try:
@@ -48,14 +51,14 @@ class swarmData:
     Ndatasets = 0
     variables = {}
 
-    def __init__(self, filename):
+    def __init__(self, filename, convert=True):
         """Initialize by reading BOLSIG output file."""
         self.ref = ''
         self.datasets = []
         self.Ndatasets = 0
         self.variables = {}
         self.parseData(filename)
-        self.ConvertData()
+        if (convert): self.ConvertData()
 
     def parseData(self, filename):
         """Read swarm data files."""
@@ -134,8 +137,18 @@ class swarmData:
                         dataset.variables[var] *= 1.0e-4 * Td
                 elif ( var == 'E/p' ):
                     if (self.variables[var][0] == 'V/cm/mmHg'):
-                        temperature = readNumber(dataset.parameters['T'])
+                        if 'T' in dataset.parameters:
+                            temperature = readNumber(dataset.parameters['T'])
+                        else:
+                            temperature = 300.0
                         dataset.variables[var] *= 100. / 133.322 * kB * temperature * Td
+                        dataset.variables['E/N'] = dataset.variables.pop(var)
+                elif ( var == 'E/p300' ):
+                    if (self.variables[var][0] == 'V/cm/mmHg'):
+                        temperature = 300.0
+                        dataset.variables[var] *= 100. / 133.322 * kB * temperature * Td
+                        # dataset.variables[var] *= 3.22e16 * 1e6 / 133.322 / Td
+                        dataset.variables['E/N'] = dataset.variables.pop(var)
                 elif ( var == 'W' ):
                     if (self.variables[var][0] == 'cm/s'):
                         dataset.variables[var] *= 1.0e-2
@@ -172,6 +185,21 @@ class swarmData:
                             if ( self.variables[var+'-max'][0] == '%' ):
                                 dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
                                 dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
+                elif ( var == 'DL/mu' ):
+                    if (self.variables[var][1] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 * readNumber(self.variables[var][1][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    elif (self.variables[var][2] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 / 3.0 * readNumber(self.variables[var][2][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    else:
+                        if (var+'-rms') in dataset.variables:
+                            if ( self.variables[var+'-rms'][0] == '%' ):
+                                dataset.variables[var+'-rms'] *= 1e-2 * dataset.variables[var]
+                        elif (var+'-max') in dataset.variables:
+                            if ( self.variables[var+'-max'][0] == '%' ):
+                                dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
+                                dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
                 elif ( var == 'DT/mu' ):
                     # if (self.variables[var][0] == '1/cm/s'):
                     #     dataset.variables[var] *= 1.0e2
@@ -190,6 +218,61 @@ class swarmData:
                             if ( self.variables[var+'-max'][0] == '%' ):
                                 dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
                                 dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
+                elif ( (var == 'a/N') or (var == 'a1/N') or (var == 'a2/N') or (var == 'a3/N') or (var == 'a4/N') ):
+                    if (self.variables[var][0] == 'cm2'):
+                        dataset.variables[var] *= 1.0e-4
+
+                    if (self.variables[var][1] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 * readNumber(self.variables[var][1][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    elif (self.variables[var][2] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 / 3.0 * readNumber(self.variables[var][2][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    else:
+                        if (var+'-rms') in dataset.variables:
+                            if ( self.variables[var+'-rms'][0] == '%' ):
+                                dataset.variables[var+'-rms'] *= 1e-2 * dataset.variables[var]
+                        elif (var+'-max') in dataset.variables:
+                            if ( self.variables[var+'-max'][0] == '%' ):
+                                dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
+                                dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
+                elif ( var == 'a/E' ):
+                    if (self.variables[var][1] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 * readNumber(self.variables[var][1][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    elif (self.variables[var][2] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 / 3.0 * readNumber(self.variables[var][2][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    else:
+                        if (var+'-rms') in dataset.variables:
+                            if ( self.variables[var+'-rms'][0] == '%' ):
+                                dataset.variables[var+'-rms'] *= 1e-2 * dataset.variables[var]
+                        elif (var+'-max') in dataset.variables:
+                            if ( self.variables[var+'-max'][0] == '%' ):
+                                dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
+                                dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
+                elif ( var == 'a/p' ):
+                    if (self.variables[var][0] == '1/cm/mmHg'):
+                        temperature = 300.0
+                        dataset.variables[var] *= 100. / 133.322 * kB * temperature
+
+                    if (self.variables[var][1] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 * readNumber(self.variables[var][1][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    elif (self.variables[var][2] != 'n/a'):
+                        error = dataset.variables[var] * 1e-2 / 3.0 * readNumber(self.variables[var][2][:-1])
+                        dataset.variables.update({var+'-rms': error})
+                    else:
+                        if (var+'-rms') in dataset.variables:
+                            if ( self.variables[var+'-rms'][0] == '%' ):
+                                dataset.variables[var+'-rms'] *= 1e-2 * dataset.variables[var]
+                        elif (var+'-max') in dataset.variables:
+                            if ( self.variables[var+'-max'][0] == '%' ):
+                                dataset.variables[var+'-max'] *= 1e-2 / 3.0 * dataset.variables[var]
+                                dataset.variables[var+'-rms'] = dataset.variables.pop(var+'-max')
+
+                    dataset.variables['a/N'] = dataset.variables.pop(var)
+                    dataset.variables['a/N-rms'] = dataset.variables.pop(var+'-rms')
 
         return
 

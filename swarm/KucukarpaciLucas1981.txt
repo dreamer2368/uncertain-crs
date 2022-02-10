@@ -1,18 +1,18 @@
 Reference
-Kucukarpaci, H. N., & Lucas, J. (2001). Electron swarm parameters in argon and krypton. Journal of Physics D: Applied Physics, 14. https://doi.org/10.1143/jjap.40.l203
+Kucukarpaci, H. N., & Lucas, J. (1981). Electron swarm parameters in argon and krypton. Journal of Physics D: Applied Physics, 14. https://doi.org/10.1143/jjap.40.l203
 
 Variables (Var,Unit,Rms,Max)
 *********************************
 E/N     Td          n/a     n/a
 W       cm/s        n/a     5%
-DLmu    V           n/a     15%
+DL/mu    V           n/a     15%
 *********************************
 
 Data
 ###################
 T   300.0
 ###################
-E/N     DLmu
+E/N     DL/mu
 =============================
 2.8247263194218526 0.6195492518285398
 4.249240719488091 1.3603925767648801
