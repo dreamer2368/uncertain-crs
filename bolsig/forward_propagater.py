@@ -20,6 +20,8 @@ filename = "./crs/%s.txt" % refset
 refcrs = cross.multipleCrossSections(filename)
 targetcrs = cross.multipleCrossSections(filename)
 
+nExcitation = 14
+
 Emax = 1.0e3
 Nmax = 150
 E_momentum = np.linspace(-4.0, 3.0, Nmax)
@@ -174,24 +176,29 @@ def depositBolsigSamples(nSample, rootDir="."):
             fID.close()
         else:
             nPoints = lxcatConfigs[config]['RUNSERIES'][3]
-            rate1s5, rate1s4, rate1s3, rate1s2, rateIon = np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints])
+            # nExcitation = 14
+            # rate1s5, rate1s4, rate1s3, rate1s2, rateIon = np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints])
+            rateExcite, rateIon = np.zeros([nSample, nExcitation, nPoints]), np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
-            # tags = ['C2','C3','C4','C5','C33']
+            excitationTags = ['C%d' % (k+2) for k in range(nExcitation)]
             for k in range(nSample):
                 outputFilename = "%s/output/%s.%d.dat" % (rootDir, config, k)
                 output = bolsigOutput(outputFilename)
                 mu[k,:] = output.outputs[4].data[:,1]
+                for ktag, tag in enumerate(excitationTags):
+                    dataType = output.typeDictS2I[tag]
+                    rateExcite[k, ktag, :] = output.outputs[dataType].data[:,1]
                 for idx, table in output.outputs.items():
                     if( (table.collisionType=='Ionization') and (table.deltaE>15.7) and (table.deltaE<15.8) ):
                         rateIon[k,:] = table.data[:,1]
-                    elif ( (table.collisionType=='Excitation') and (table.deltaE>11.5) and (table.deltaE<11.6) ):
-                        rate1s5[k,:] = np.copy(table.data[:,1])
-                    elif ( (table.collisionType=='Excitation') and (table.deltaE>11.6) and (table.deltaE<11.7) ):
-                        rate1s4[k,:] = np.copy(table.data[:,1])
-                    elif ( (table.collisionType=='Excitation') and (table.deltaE>11.7) and (table.deltaE<11.8) ):
-                        rate1s3[k,:] = np.copy(table.data[:,1])
-                    elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
-                        rate1s2[k,:] = np.copy(table.data[:,1])
+                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.5) and (table.deltaE<11.6) ):
+                    #     rate1s5[k,:] = np.copy(table.data[:,1])
+                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.6) and (table.deltaE<11.7) ):
+                    #     rate1s4[k,:] = np.copy(table.data[:,1])
+                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.7) and (table.deltaE<11.8) ):
+                    #     rate1s3[k,:] = np.copy(table.data[:,1])
+                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
+                    #     rate1s2[k,:] = np.copy(table.data[:,1])
 
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
             fID = open(dataFilename,'a+b')
@@ -201,22 +208,26 @@ def depositBolsigSamples(nSample, rootDir="."):
             fID = open(dataFilename,'a+b')
             rateIon.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.1s5.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.excite.dat' % (rootDir,config)
             fID = open(dataFilename,'a+b')
-            rate1s5.tofile(fID)
+            rateExcite.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.1s4.dat' % (rootDir,config)
-            fID = open(dataFilename,'a+b')
-            rate1s4.tofile(fID)
-            fID.close()
-            dataFilename = '%s/data/%s.1s3.dat' % (rootDir,config)
-            fID = open(dataFilename,'a+b')
-            rate1s3.tofile(fID)
-            fID.close()
-            dataFilename = '%s/data/%s.1s2.dat' % (rootDir,config)
-            fID = open(dataFilename,'a+b')
-            rate1s2.tofile(fID)
-            fID.close()
+            # dataFilename = '%s/data/%s.1s5.dat' % (rootDir,config)
+            # fID = open(dataFilename,'a+b')
+            # rate1s5.tofile(fID)
+            # fID.close()
+            # dataFilename = '%s/data/%s.1s4.dat' % (rootDir,config)
+            # fID = open(dataFilename,'a+b')
+            # rate1s4.tofile(fID)
+            # fID.close()
+            # dataFilename = '%s/data/%s.1s3.dat' % (rootDir,config)
+            # fID = open(dataFilename,'a+b')
+            # rate1s3.tofile(fID)
+            # fID.close()
+            # dataFilename = '%s/data/%s.1s2.dat' % (rootDir,config)
+            # fID = open(dataFilename,'a+b')
+            # rate1s2.tofile(fID)
+            # fID.close()
 
     return
 
