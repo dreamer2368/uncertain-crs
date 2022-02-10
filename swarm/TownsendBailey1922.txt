@@ -1,0 +1,30 @@
+Reference
+**digitized from Pitchford, L. C., Alves, L. L., Bartschat, K., Biagi, S. F., Bordage, M. C., Phelps, A. V., Ferreira, C. M., Hagelaar, G. J. M., Morgan, W. L., Pancheshnyi, S., Puech, V., Stauffer, A., & Zatsarinny, O. (2013). Comparisons of sets of electron-neutral scattering cross sections and swarm parameters in noble gases: I. Argon. Journal of Physics D: Applied Physics, 46(33). https://doi.org/10.1088/0022-3727/46/33/334001
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E/N     Td          n/a     n/a
+DT/mu   V           n/a      n/a
+*********************************
+
+Data
+###################
+###################
+E/N     DT/mu
+=============================
+3.13946e-1 2.35110e+0
+3.34279e-1 2.37684e+0
+5.03856e-1 2.73713e+0
+6.29133e-1 3.09743e+0
+6.63442e-1 3.18750e+0
+1.24864e+0 4.19118e+0
+2.52648e+0 6.80331e+0
+3.75339e+0 7.98713e+0
+6.32177e+0 8.39890e+0
+8.40482e+0 7.92279e+0
+1.26685e+1 7.71691e+0
+1.75907e+1 7.56250e+0
+2.61331e+1 8.01287e+0
+3.61120e+1 8.07721e+0
+5.90865e+1 7.98713e+0
+=============================
