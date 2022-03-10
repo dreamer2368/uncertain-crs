@@ -48,6 +48,12 @@ rate273K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
              'SAVERESULTS': ['"transport.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
              }
 
+reaction300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
+             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0., 1.0E18, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, 1.0, 1],
+             'RUNSERIES': [2, 5.0e-2, 10., 50, 3],
+             'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
+             }
+
 expConfigs = {'AlAminLucas1987': AlAminLucas1987,
               'MilloyCrompton1977': MilloyCrompton1977,
               'NakamuraKurachi1988': NakamuraKurachi1988}
@@ -57,6 +63,8 @@ lxcatConfigs = {'transport300K': transport300K,
                 'transport90K': transport90K,
                 'rate300K': rate300K,
                 'rate273K': rate273K}
+
+glowDischargeConfigs = {'reaction300K': reaction300K}
 
 def writeInputFile(inputFilename, expConfig, crsFile=None, outputFile=None, noscreen = True):
     content = ''

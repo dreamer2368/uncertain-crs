@@ -25,7 +25,7 @@ for expDatafile in swarmDatasets:
 inputList = ["transport300K","transport77K","transport90K","rate300K"]
 
 # datasets
-datasets = ["IST-Lisbon"]
+datasets = ["Biagi"]
 Nsets = len(datasets)
 refset = datasets[0]
 filename = "./crs/%s.txt" % refset
@@ -174,15 +174,37 @@ def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1):
 
     return
 
-def setupInputFiles(nSample, rootDir='.'):
+def setupInputFiles(nSample, rootDir='.', configs = lxcatConfigs):
 
-    for name, lxcatconfig in lxcatConfigs.items():
+    for name, config in configs.items():
         for k in range(nSample):
             inputFile = '%s/input/%s.%d.dat' % (rootDir, name, k)
             crsFile = '%s/crs/test.crs.%d.txt' % (rootDir, k)
             outputFile = '%s/output/%s.%d.dat' % (rootDir, name, k)
-            writeInputFile(inputFile, lxcatconfig, crsFile, outputFile)
+            writeInputFile(inputFile, config, crsFile, outputFile)
 
+    return
+
+def getReactionFromBolsig(outputFilename, collisionType, deltaE, deltaERange = 0.5, inputIndex = 3):
+    output = bolsigOutput(outputFilename)
+
+    nPoints = output.outputs[0].data.shape[0]
+    outputTable = np.zeros([nPoints, 2])
+
+    if inputIndex in output.typeDictI2S:
+        print("Input variable: %s" % (output.typeDictI2S[inputIndex]))
+    else:
+        raise RuntimeError("Input index %d does not exist in output file %s!" % (inputIndex, outputFilename))
+
+    outputTable[:, 0] = output.outputs[inputIndex].data[:, 1]
+    for idx, table in output.outputs.items():
+        if( (table.collisionType == collisionType) and (table.deltaE > deltaE - deltaERange) and (table.deltaE < deltaE + deltaERange)):
+            print ("Output collision type: %s" % table.collisionType)
+            print ("Output reaction energy: %.8E" % table.deltaE)
+            outputTable[:, 1] = table.data[:, 1]
+            return outputTable
+
+    raise RuntimeError("No collision exists for collision type %s and reaction energy %.5E eV!" % (collisionType, deltaE))
     return
 
 def depositBolsigSamples(nSample, rootDir="."):
