@@ -5,6 +5,18 @@ from swarmData import kB, Td, swarmDatasets, swarmData
 from input_writer import lxcatConfigs, writeInputFile
 import models
 
+paschen = {'1s5': 0, '1s4': 1, '1s3': 2, '1s2': 3,
+           '2p10': 4, '2p9': 5, '2p8': 6, '2p7': 7, '2p6': 8, '2p5': 9, '2p4': 10, '2p3': 11, '2p2': 12, '2p1': 13 }
+nExcitation = 14
+excitationTags = ['C%d' % (k+2) for k in range(nExcitation)]
+
+# Einstein's transition probability (s^-1), from 2p levels to 1s levels
+Akl = np.zeros([4,10])
+Akl[0,:] = 1.0e8 * np.array([0.212, 0.366, 0.096, 0.057, 0.274, 0.0, 0.0065, 0.0395, 0.067, 0.0])
+Akl[1,:] = 1.0e8 * np.array([0.060, 0.0, 0.233, 0.277, 0.0468, 0.430, 2.5e-4, 0.087, 0.02, 0.00241])
+Akl[2,:] = 1.0e8 * np.array([0.0117, 0.0, 0.0, 0.028, 0.0, 0.0, 0.196, 0.0, 0.127, 0.0])
+Akl[3,:] = 1.0e8 * np.array([0.0025, 0.0, 0.0161, 0.0115, 0.059, 0.0, 0.147, 0.244, 0.168, 0.472])
+
 expDatasets = []
 for expDatafile in swarmDatasets:
     filename = "../swarm/" + expDatafile + ".txt"
@@ -13,11 +25,17 @@ for expDatafile in swarmDatasets:
 inputList = ["transport300K","transport77K","transport90K","rate300K"]
 
 # datasets
-datasets = ["BSR"]
+datasets = ["IST-Lisbon"]
 Nsets = len(datasets)
 refset = datasets[0]
 filename = "./crs/%s.txt" % refset
 refcrs = cross.multipleCrossSections(filename)
+exciteIdx = []
+for k, c in enumerate(refcrs.crs):
+    if (c.colType==2):
+        exciteIdx += [ k ]
+        # print("reference, %d-th excitation: %.8E" % (k, c.deltaE))
+        # print("target, %d-th excitation: %.8E" % (k, targetcrs.crs[k].deltaE))
 targetcrs = cross.multipleCrossSections(filename)
 
 nExcitation = 14
@@ -37,6 +55,25 @@ E_ion = np.exp(E_ion)
 Nw = 50
 wtest = np.linspace(-5,9.,Nw)
 E_exc = np.exp(wtest)
+
+def addCascadeContribution(inputcrs):
+    exciteIdx_ = []
+    for k, c in enumerate(inputcrs.crs):
+        if (c.colType==2):
+            exciteIdx_ += [ k ]
+            print("%d-th crs: %.8E" % (k, c.deltaE))
+    for s in range(4):
+        sLevel = exciteIdx_[s]
+        temp = np.copy(inputcrs.crs[sLevel].data)
+        for p in range(10):
+            pLevel = exciteIdx_[p+4]
+            ll = inputcrs.crs[pLevel].data.shape[0]
+            # for kk in range(ll):
+            #     print(temp[-kk-1,0], ": ", inputcrs.crs[pLevel].data[-kk-1,0])
+            temp[-(ll-1):,1] += inputcrs.crs[pLevel].data[1:,1] * Akl[s,p] / np.sum(Akl[:,p])
+        inputcrs.crs[sLevel].data = np.copy(temp)
+
+    return inputcrs
 
 def generateCrossSection(inputs):
 
@@ -69,18 +106,18 @@ def generateCrossSection(inputs):
         elif ((c.colType==3)):
             targetcrs.crs[k].data = crs_ion
             targetcrs.crs[k].deltaE = models.E_ion[0]
-        # elif ((c.colType==2) and (c.deltaE > threshold[0]) and (c.deltaE < threshold[1])):
-        #     targetcrs.crs[k].data = crs_ext[0]
-        #     targetcrs.crs[k].deltaE = models.E_ext[0]
-        # elif ((c.colType==2) and (c.deltaE > threshold[1]) and (c.deltaE < threshold[2])):
-        #     targetcrs.crs[k].data = crs_ext[1]
-        #     targetcrs.crs[k].deltaE = models.E_ext[1]
-        # elif ((c.colType==2) and (c.deltaE > threshold[2]) and (c.deltaE < threshold[3])):
-        #     targetcrs.crs[k].data = crs_ext[2]
-        #     targetcrs.crs[k].deltaE = models.E_ext[2]
-        # elif ((c.colType==2) and (c.deltaE > threshold[3]) and (c.deltaE < threshold[3] + 0.1)):
-        #     targetcrs.crs[k].data = crs_ext[3]
-        #     targetcrs.crs[k].deltaE = models.E_ext[3]
+        elif ((c.colType==2) and (c.deltaE > threshold[0]) and (c.deltaE < threshold[1])):
+            targetcrs.crs[k].data = crs_ext[0]
+            targetcrs.crs[k].deltaE = models.E_ext[0]
+        elif ((c.colType==2) and (c.deltaE > threshold[1]) and (c.deltaE < threshold[2])):
+            targetcrs.crs[k].data = crs_ext[1]
+            targetcrs.crs[k].deltaE = models.E_ext[1]
+        elif ((c.colType==2) and (c.deltaE > threshold[2]) and (c.deltaE < threshold[3])):
+            targetcrs.crs[k].data = crs_ext[2]
+            targetcrs.crs[k].deltaE = models.E_ext[2]
+        elif ((c.colType==2) and (c.deltaE > threshold[3]) and (c.deltaE < threshold[3] + 0.1)):
+            targetcrs.crs[k].data = crs_ext[3]
+            targetcrs.crs[k].deltaE = models.E_ext[3]
 
     if (filename is not None):
         targetcrs.writeLXCatFile(filename)
@@ -232,7 +269,9 @@ def depositBolsigSamples(nSample, rootDir="."):
     return
 
 if __name__ == "__main__":
+    testcrs = addCascadeContribution(refcrs)
+    testcrs.writeLXCatFile("./crs/IST-Lisbon.cascade.txt")
     nSample=72
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=nSample)
     # setupInputFiles(nSample,rootDir='./forward-propagate')
-    depositBolsigSamples(nSample, rootDir='./forward-propagate')
+    #depositBolsigSamples(nSample, rootDir='./forward-propagate')
