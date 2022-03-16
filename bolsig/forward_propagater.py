@@ -2,7 +2,7 @@ import numpy as np
 import crossSections as cross
 from swarmParameters import bolsigOutput
 from swarmData import kB, Td, swarmDatasets, swarmData
-from input_writer import lxcatConfigs, writeInputFile
+from input_writer import lxcatConfigs, glowDischargeConfigs, writeInputFile
 import models
 
 paschen = {'1s5': 0, '1s4': 1, '1s3': 2, '1s2': 3,
@@ -207,42 +207,50 @@ def getReactionFromBolsig(outputFilename, collisionType, deltaE, deltaERange = 0
     raise RuntimeError("No collision exists for collision type %s and reaction energy %.5E eV!" % (collisionType, deltaE))
     return
 
-def depositBolsigSamples(nSample, rootDir="."):
+def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
 
-    for config in inputList:
-        if (config[:9]=='transport'):
-            nPoints = lxcatConfigs[config]['RUNSERIES'][3]
+    for name, config in configs.items():
+        if (name[:9]=='transport'):
+            nPoints = config['RUNSERIES'][3]
+            Te = np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             DT = np.zeros([nSample,nPoints])
             DL = np.zeros([nSample,nPoints])
             for k in range(nSample):
-                outputFilename = "%s/output/%s.%d.dat" % (rootDir, config, k)
+                outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
                 output = bolsigOutput(outputFilename)
+                Te[k,:] = output.outputs[3].data[:,1]
                 mu[k,:] = output.outputs[4].data[:,1]
                 DT[k,:] = output.outputs[5].data[:,1]
                 DL[k,:] = output.outputs[18].data[:,1]
-            dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.Te.dat' % (rootDir,name)
+            fID = open(dataFilename,'a+b')
+            Te.tofile(fID)
+            fID.close()
+            dataFilename = '%s/data/%s.muN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             mu.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.DTN.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.DTN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             DT.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.DLN.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.DLN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             DL.tofile(fID)
             fID.close()
         else:
-            nPoints = lxcatConfigs[config]['RUNSERIES'][3]
+            nPoints = config['RUNSERIES'][3]
             # nExcitation = 14
             # rate1s5, rate1s4, rate1s3, rate1s2, rateIon = np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints])
             rateExcite, rateIon = np.zeros([nSample, nExcitation, nPoints]), np.zeros([nSample,nPoints])
+            Te = np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             excitationTags = ['C%d' % (k+2) for k in range(nExcitation)]
             for k in range(nSample):
-                outputFilename = "%s/output/%s.%d.dat" % (rootDir, config, k)
+                outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
                 output = bolsigOutput(outputFilename)
+                Te[k,:] = output.outputs[3].data[:,1]
                 mu[k,:] = output.outputs[4].data[:,1]
                 for ktag, tag in enumerate(excitationTags):
                     dataType = output.typeDictS2I[tag]
@@ -259,31 +267,35 @@ def depositBolsigSamples(nSample, rootDir="."):
                     # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
                     #     rate1s2[k,:] = np.copy(table.data[:,1])
 
-            dataFilename = '%s/data/%s.muN.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.Te.dat' % (rootDir,name)
+            fID = open(dataFilename,'a+b')
+            Te.tofile(fID)
+            fID.close()
+            dataFilename = '%s/data/%s.muN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             mu.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.ion.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.ion.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             rateIon.tofile(fID)
             fID.close()
-            dataFilename = '%s/data/%s.excite.dat' % (rootDir,config)
+            dataFilename = '%s/data/%s.excite.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
             rateExcite.tofile(fID)
             fID.close()
-            # dataFilename = '%s/data/%s.1s5.dat' % (rootDir,config)
+            # dataFilename = '%s/data/%s.1s5.dat' % (rootDir,name)
             # fID = open(dataFilename,'a+b')
             # rate1s5.tofile(fID)
             # fID.close()
-            # dataFilename = '%s/data/%s.1s4.dat' % (rootDir,config)
+            # dataFilename = '%s/data/%s.1s4.dat' % (rootDir,name)
             # fID = open(dataFilename,'a+b')
             # rate1s4.tofile(fID)
             # fID.close()
-            # dataFilename = '%s/data/%s.1s3.dat' % (rootDir,config)
+            # dataFilename = '%s/data/%s.1s3.dat' % (rootDir,name)
             # fID = open(dataFilename,'a+b')
             # rate1s3.tofile(fID)
             # fID.close()
-            # dataFilename = '%s/data/%s.1s2.dat' % (rootDir,config)
+            # dataFilename = '%s/data/%s.1s2.dat' % (rootDir,name)
             # fID = open(dataFilename,'a+b')
             # rate1s2.tofile(fID)
             # fID.close()
@@ -291,9 +303,10 @@ def depositBolsigSamples(nSample, rootDir="."):
     return
 
 if __name__ == "__main__":
-    testcrs = addCascadeContribution(refcrs)
-    testcrs.writeLXCatFile("./crs/IST-Lisbon.cascade.txt")
+#    testcrs = addCascadeContribution(refcrs)
+#    testcrs.writeLXCatFile("./crs/IST-Lisbon.cascade.txt")
     nSample=72
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=3)
-    setupInputFiles(nSample,rootDir='./forward-propagate')
+    #setupInputFiles(nSample,rootDir='./forward-propagate')
+    setupInputFiles(nSample, rootDir='./glow-discharge', configs=glowDischargeConfigs)
     #depositBolsigSamples(nSample, rootDir='./forward-propagate')
