@@ -22,7 +22,7 @@ for expDatafile in swarmDatasets:
     filename = "../swarm/" + expDatafile + ".txt"
     expDatasets += [swarmData(filename)]
 
-inputList = ["transport300K","transport77K","transport90K","rate300K"]
+inputList = ["transport300K","transport77K","transport90K","rate300K","rate273K"]
 
 # datasets
 datasets = ["Biagi"]
@@ -294,6 +294,6 @@ if __name__ == "__main__":
     testcrs = addCascadeContribution(refcrs)
     testcrs.writeLXCatFile("./crs/IST-Lisbon.cascade.txt")
     nSample=72
-    #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=nSample)
-    # setupInputFiles(nSample,rootDir='./forward-propagate')
+    #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=3)
+    setupInputFiles(nSample,rootDir='./forward-propagate')
     #depositBolsigSamples(nSample, rootDir='./forward-propagate')
