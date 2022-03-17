@@ -53,9 +53,9 @@ rate273K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
              'SAVERESULTS': ['"transport.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
              }
 
-reaction300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
-             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0., 1.0E18, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, 1.0, 1],
-             'RUNSERIES': [2, 5.0e-2, 50., 200, 1],
+reaction300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
+             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0., 1.0E18, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.999 1e-3', 1],
+             'RUNSERIES': [2, 5.0e-2, 50., 200, 3],
              'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
              }
 

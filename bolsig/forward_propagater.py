@@ -25,7 +25,7 @@ for expDatafile in swarmDatasets:
 inputList = ["transport300K","transport77K","transport90K","rate300K","rate273K"]
 
 # datasets
-datasets = ["Biagi"]
+datasets = ["Biagi+step"]
 Nsets = len(datasets)
 refset = datasets[0]
 filename = "./crs/%s.txt" % refset
@@ -241,9 +241,8 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
             fID.close()
         else:
             nPoints = config['RUNSERIES'][3]
-            # nExcitation = 14
-            # rate1s5, rate1s4, rate1s3, rate1s2, rateIon = np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints]), np.zeros([nSample,nPoints])
             rateExcite, rateIon = np.zeros([nSample, nExcitation, nPoints]), np.zeros([nSample,nPoints])
+            rateStepIon = np.copy(rateIon)
             Te = np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             excitationTags = ['C%d' % (k+2) for k in range(nExcitation)]
@@ -258,14 +257,10 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
                 for idx, table in output.outputs.items():
                     if( (table.collisionType=='Ionization') and (table.deltaE>15.7) and (table.deltaE<15.8) ):
                         rateIon[k,:] = table.data[:,1]
-                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.5) and (table.deltaE<11.6) ):
-                    #     rate1s5[k,:] = np.copy(table.data[:,1])
-                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.6) and (table.deltaE<11.7) ):
-                    #     rate1s4[k,:] = np.copy(table.data[:,1])
-                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.7) and (table.deltaE<11.8) ):
-                    #     rate1s3[k,:] = np.copy(table.data[:,1])
-                    # elif ( (table.collisionType=='Excitation') and (table.deltaE>11.8) and (table.deltaE<11.9) ):
-                    #     rate1s2[k,:] = np.copy(table.data[:,1])
+                if 'C47' in output.typeDictS2I:
+                    dataType = output.typeDictS2I['C47']
+                    rateStepIon[k, :] = output.outputs[dataType].data[:,1]
+                    
 
             dataFilename = '%s/data/%s.Te.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
@@ -283,22 +278,10 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
             fID = open(dataFilename,'a+b')
             rateExcite.tofile(fID)
             fID.close()
-            # dataFilename = '%s/data/%s.1s5.dat' % (rootDir,name)
-            # fID = open(dataFilename,'a+b')
-            # rate1s5.tofile(fID)
-            # fID.close()
-            # dataFilename = '%s/data/%s.1s4.dat' % (rootDir,name)
-            # fID = open(dataFilename,'a+b')
-            # rate1s4.tofile(fID)
-            # fID.close()
-            # dataFilename = '%s/data/%s.1s3.dat' % (rootDir,name)
-            # fID = open(dataFilename,'a+b')
-            # rate1s3.tofile(fID)
-            # fID.close()
-            # dataFilename = '%s/data/%s.1s2.dat' % (rootDir,name)
-            # fID = open(dataFilename,'a+b')
-            # rate1s2.tofile(fID)
-            # fID.close()
+            dataFilename = '%s/data/%s.step_ion.dat' % (rootDir,name)
+            fID = open(dataFilename,'a+b')
+            rateStepIon.tofile(fID)
+            fID.close()
 
     return
 
