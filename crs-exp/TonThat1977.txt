@@ -1,0 +1,31 @@
+Reference
+Ton-That, D., & Flannery, M. R. (1977). Cross sections for ionization of metastable rare-gas atoms (Ne*, Ar*, Kr*, Xe*) and of metastable N2*, CO* molecules by electron impact. Physical Review A, 15(2), 517–526. https://doi.org/10.1103/PhysRevA.15.517
+
+Variables (Var,Unit,Rms,Max)
+*********************************
+E         eV          n/a     n/a
+crs       cm2eV       n/a     n/a
+*********************************
+
+Data
+############################
+Step-wise Ionization, 1+
+############################
+E    crs
+=============================
+5.54764e+0 2.50054e-15
+7.48421e+0 6.02777e-15
+1.00584e+1 8.56901e-15
+1.26348e+1 1.09680e-14
+1.76582e+1 1.36979e-14
+2.25108e+1 1.80690e-14
+2.76868e+1 2.13127e-14
+3.26261e+1 2.39451e-14
+3.73536e+1 2.50277e-14
+4.70813e+1 2.68164e-14
+5.70868e+1 2.98720e-14
+6.77254e+1 3.10962e-14
+7.73043e+1 3.41505e-14
+8.72893e+1 3.66412e-14
+9.99462e+1 3.80524e-14
+=============================

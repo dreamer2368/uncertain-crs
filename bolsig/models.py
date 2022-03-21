@@ -77,9 +77,9 @@ def Excite_resonance(n,theta,E):
     return 4. * np.pi * a0 * a0 * R0 * R0 / E * F0 / E_ext[n-1] * rel_factor * ( 1.0 - (E_ext[n-1]/E)**alpha0 ) ** beta
 #     return 4. * np.pi * a0 * a0 * R0 * R0 / E * F0 / E_ext[n-1] * rel_factor * largeE_factor
 
-def total_Ion_BED(theta,E):
+def total_Ion_BED(theta, E, deltaE=E_ion[0]):
     a, b, c = theta
-    t = E / E_ion[0]
+    t = E / deltaE
     return 4. * np.pi * a0 * a0 / t * ( a * np.log(t) + b * (1. - 1. / t) + c * np.log(t) / (t + 1.) )
 
 def elastic_MERT(theta,E,N=10):

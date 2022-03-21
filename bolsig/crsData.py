@@ -10,7 +10,8 @@ typeDictS2I = {"Excitation, level 1":                   0,
                "Ionization, 3+":                        7,
                "Ionization, 4+":                        8,
                "Elastic, integral":                     9,
-               "Elastic, momentum":                     10}
+               "Elastic, momentum":                     10,
+               "Step-wize Ionization, 1+":              11}
 typeDictI2S = {}
 for key, value in typeDictS2I.items():
     typeDictI2S.update({value: key})
@@ -136,6 +137,9 @@ class crsData:
 
             if ( self.variables[var1][0] == 'cm2' ):
                 temp[:,1] *= 1e-4
+            elif ( self.variables[var1][0] == 'cm2eV' ):
+                temp[:,1] *= 1e-4
+                temp[:,1] /= temp[:,0]
 
             if ( self.variables[var1][1]!='n/a' ):
                 error = temp[:,1][...,None] * 1e-2 * readNumber(self.variables[var1][1][:-1])
