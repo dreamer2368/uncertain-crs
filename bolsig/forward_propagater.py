@@ -86,12 +86,12 @@ def generateCrossSection(inputs):
     crs_momentum[0,0] = 0.0
 
     Etarget = E_ion + models.E_ion[0]
-    crs_ion = models.total_Ion_BED(theta_ion, Etarget)
+    crs_ion = models.total_Ion_BED(theta_ion, Etarget, models.E_ion[0])
     crs_ion = np.append(Etarget[:,None],crs_ion[:,None],axis=1)
     crs_ion = np.append(np.array([[models.E_ion[0], 0.0]]), crs_ion, axis=0)
 
     Etarget = E_ion + models.E_step_ion[0]
-    crs_step_ion = models.total_Ion_BED(theta_step_ion, Etarget)
+    crs_step_ion = models.total_Ion_BED(theta_step_ion, Etarget, models.E_step_ion[0])
     crs_step_ion = np.append(Etarget[:,None],crs_step_ion[:,None],axis=1)
     crs_step_ion = np.append(np.array([[models.E_step_ion[0], 0.0]]), crs_step_ion, axis=0)
 
