@@ -54,9 +54,15 @@ rate273K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar', 1],
              }
 
 reaction300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
-             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0., 1.0E18, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.999 1e-3', 1],
+             'CONDITIONS': [0., 0., 0., 300., 300., 0., 2.5e-6, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.99999 1e-5', 1],
              'RUNSERIES': [2, 5.0e-2, 50., 200, 3],
              'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
+             }
+
+reverse300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
+             'CONDITIONS': [0., 0., 0., 300., 300., 0., 2.5e-6, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.99999 1e-5', 1],
+             'RUNSERIES': [2, 5.0e-2, 50., 200, 3],
+             'SAVERESULTS': ['"reverse_rate.300K.dat"', 3, 1, 1, 0, 1, 0, 0, 0]
              }
 
 expConfigs = {'AlAminLucas1987': AlAminLucas1987,
@@ -69,7 +75,8 @@ lxcatConfigs = {'transport300K': transport300K,
                 'rate300K': rate300K,
                 'rate273K': rate273K}
 
-glowDischargeConfigs = {'reaction300K': reaction300K}
+glowDischargeConfigs = {'reaction300K': reaction300K,
+                        'reverse300K': reverse300K}
 
 
 def writeInputFile(inputFilename, expConfig, crsFile=None, outputFile=None, noscreen = True):

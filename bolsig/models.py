@@ -25,6 +25,9 @@ E_ext = [11.54835442, 11.62359272, 11.72316039, 11.82807116]
 # Ionization energy levels in eV, from NIST
 E_ion = [15.7596119, 27.62967]
 
+# Meta-stable ionization energy
+E_step_ion = [E_ion[0] - E_ext[0]]
+
 # All take theta as model parameters, E as electron energy in eV.
 def Excite_metastable(n,theta,E):
     # n: excited energy level, starting from 1,2,...

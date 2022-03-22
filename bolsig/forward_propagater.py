@@ -48,7 +48,8 @@ E_momentum = np.append(np.array([1e-17]),E_momentum)
 
 Nw = 50
 wtest = np.linspace(-5,9.,Nw)
-E_ion = np.exp(wtest) + models.E_ion[0]
+# E_ion = np.exp(wtest) + models.E_ion[0]
+E_ion = np.exp(wtest)
 E_ion = np.linspace(np.log(E_ion[0]), np.log(Emax), Nw)
 E_ion = np.exp(E_ion)
 
@@ -78,15 +79,21 @@ def addCascadeContribution(inputcrs):
 def generateCrossSection(inputs):
 
     theta, filename = inputs
-    theta_momentum, theta_ion, theta_ext = theta
+    theta_momentum, theta_ion, theta_ext, theta_step_ion = theta
 
     crs_momentum = models.elastic_shifted_MERT(theta_momentum, E_momentum)
     crs_momentum = np.append(E_momentum[:,None],crs_momentum[:,None],axis=1)
     crs_momentum[0,0] = 0.0
 
-    crs_ion = models.total_Ion_BED(theta_ion, E_ion)
-    crs_ion = np.append(E_ion[:,None],crs_ion[:,None],axis=1)
+    Etarget = E_ion + models.E_ion[0]
+    crs_ion = models.total_Ion_BED(theta_ion, Etarget)
+    crs_ion = np.append(Etarget[:,None],crs_ion[:,None],axis=1)
     crs_ion = np.append(np.array([[models.E_ion[0], 0.0]]), crs_ion, axis=0)
+
+    Etarget = E_ion + models.E_step_ion[0]
+    crs_step_ion = models.total_Ion_BED(theta_step_ion, Etarget)
+    crs_step_ion = np.append(Etarget[:,None],crs_step_ion[:,None],axis=1)
+    crs_step_ion = np.append(np.array([[models.E_step_ion[0], 0.0]]), crs_step_ion, axis=0)
 
     crs_ext = []
     for k in range(len(models.E_ext)):
@@ -100,12 +107,17 @@ def generateCrossSection(inputs):
         crs_ext += [np.copy(tempcrs)]
 
     threshold = np.floor( 10.0 * np.array(models.E_ext) ) / 10.0
+    threshold_ion = np.floor( 10.0 * np.array(models.E_ion) ) / 10.0
     for k, c in enumerate(refcrs.crs):
         if ((c.colType==0) or (c.colType==1)):
             targetcrs.crs[k].data = crs_momentum
         elif ((c.colType==3)):
-            targetcrs.crs[k].data = crs_ion
-            targetcrs.crs[k].deltaE = models.E_ion[0]
+            if ((c.deltaE > threshold_ion[0]) and (c.deltaE < threshold_ion[0] + 0.1)):
+                targetcrs.crs[k].data = crs_ion
+                targetcrs.crs[k].deltaE = models.E_ion[0]
+            else:
+                targetcrs.crs[k].data = crs_step_ion
+                targetcrs.crs[k].deltaE = models.E_step_ion[0]
         elif ((c.colType==2) and (c.deltaE > threshold[0]) and (c.deltaE < threshold[1])):
             targetcrs.crs[k].data = crs_ext[0]
             targetcrs.crs[k].deltaE = models.E_ext[0]
@@ -136,6 +148,12 @@ def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1):
     inds = np.random.randint(len(sample_ion), size=nSample)
     theta_ion = np.squeeze(sample_ion[inds,:3])
 
+    sample_step_ion = np.fromfile('%s/crs.ionization.step-wise.dat' % sampleDir)
+    sample_step_ion = np.reshape(sample_step_ion, [int(len(sample_step_ion)/3), 3])
+
+    inds = np.random.randint(len(sample_step_ion), size=nSample)
+    theta_step_ion = np.squeeze(sample_step_ion[inds,:])
+
 
     sample_ext = np.fromfile('%s/crs.excitation.1s5.dat' % sampleDir)
     sample_ext = np.reshape(sample_ext, [int(len(sample_ext)/4), 4])
@@ -164,7 +182,7 @@ def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1):
     inputss = []
     for k in range(nSample):
         theta_ext = [theta_ext1[k], theta_ext2[k], theta_ext3[k], theta_ext4[k]]
-        theta = [theta_momentum[k], theta_ion[k], theta_ext]
+        theta = [theta_momentum[k], theta_ion[k], theta_ext, theta_step_ion[k]]
         filename = '%s/test.crs.%d.txt' % (crsDir, k)
         inputss += [[theta, filename]]
         # print(inputss)
