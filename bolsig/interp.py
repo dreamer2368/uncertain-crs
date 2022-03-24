@@ -35,3 +35,42 @@ def quadratic_interpolate(data_x, data_y, dx, x_test):
     grad_y = dfl * data_y[gl] + df0 * data_y[g0] + dfr * data_y[gr]
 
     return y, grad_y
+
+def histogram_weight_2d(data_x, data_y, Nx, Ny, xlim, ylim):
+    Np = len(data_x)
+    xmin, xmax = xlim
+    ymin, ymax = ylim
+
+    dx, dy = (xmax - xmin) / (Nx + 1), (ymax - ymin) / (Nx + 1)
+
+    gxl = (np.floor((data_x - xmin) / dx)).astype(np.int)
+    gxr = gxl + 1
+    hx = (data_x - xmin) / dx - gxl
+    fxl = 1.0 - hx
+    fxr = hx
+
+    gyl = (np.floor((data_y - ymin) / dy)).astype(np.int)
+    gyr = gyl + 1
+    hy = (data_y - ymin) / dy - gyl
+    fyl = 1.0 - hy
+    fyr = hy
+
+    wg = np.zeros([Nx+1, Ny+1])
+    for p in range(Np):
+        if( (gxl[p]<0) or (gxr[p]>Nx) or (gyl[p]<0) or (gyr[p]>Ny) ): continue
+
+        wg[gxl[p], gyl[p]] += fxl[p] * fyl[p] / Np
+        wg[gxl[p], gyr[p]] += fxl[p] * fyr[p] / Np
+        wg[gxr[p], gyl[p]] += fxr[p] * fyl[p] / Np
+        wg[gxl[p], gyr[p]] += fxr[p] * fyr[p] / Np
+
+    data_w = np.zeros((Np,))
+    for p in range(Np):
+        if( (gxl[p]<0) or (gxr[p]>Nx) or (gyl[p]<0) or (gyr[p]>Ny) ): continue
+
+        data_w[p] += fxl[p] * fyl[p] * wg[gxl[p], gyl[p]]
+        data_w[p] += fxr[p] * fyl[p] * wg[gxr[p], gyl[p]]
+        data_w[p] += fxl[p] * fyr[p] * wg[gxl[p], gyr[p]]
+        data_w[p] += fxr[p] * fyr[p] * wg[gxr[p], gyr[p]]
+
+    return data_w
