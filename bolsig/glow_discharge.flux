@@ -1,12 +1,12 @@
 #!/bin/bash
-#MSUB -l nodes=2
+#MSUB -l nodes=20
 #MSUB -l partition=quartz
-#MSUB -l walltime=0:20:00
+#MSUB -l walltime=12:00:00
 #MSUB -m be
 #MSUB -N bolsig-forward
 #MSUB -V
 #MSUB -j oe -o result-%j.log
-#MSUB -q pdebug
+#MSUB -q pbatch
 
 ppn=36
 numProcs=$(($SLURM_NNODES*$ppn))
@@ -19,7 +19,7 @@ scontrol show job $SLURM_JOBID
 
 chmod u+x $commandFile
 
-for k in {1..1}
+for k in {1..10}
 do
     python3 -c "from forward_propagater import sampleCrossSection; sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./glow-discharge/crs', nSample=$numProcs);"
     if [ $? -ne 0 ]; then

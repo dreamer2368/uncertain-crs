@@ -199,7 +199,7 @@ def setupInputFiles(nSample, rootDir='.', configs = lxcatConfigs):
             inputFile = '%s/input/%s.%d.dat' % (rootDir, name, k)
             crsFile = '%s/crs/test.crs.%d.txt' % (rootDir, k)
             outputFile = '%s/output/%s.%d.dat' % (rootDir, name, k)
-            writeInputFile(inputFile, config, crsFile, outputFile)
+            writeInputFile(inputFile, config, crsFile, outputFile, False)
 
     return
 
@@ -306,7 +306,7 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
 if __name__ == "__main__":
 #    testcrs = addCascadeContribution(refcrs)
 #    testcrs.writeLXCatFile("./crs/IST-Lisbon.cascade.txt")
-    nSample=72
+    nSample=720
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=3)
     #setupInputFiles(nSample,rootDir='./forward-propagate')
     setupInputFiles(nSample, rootDir='./glow-discharge', configs=glowDischargeConfigs)
