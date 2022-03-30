@@ -73,4 +73,4 @@ def histogram_weight_2d(data_x, data_y, Nx, Ny, xlim, ylim):
         data_w[p] += fxl[p] * fyr[p] * wg[gxl[p], gyr[p]]
         data_w[p] += fxr[p] * fyr[p] * wg[gxr[p], gyr[p]]
 
-    return data_w
+    return data_w, wg
