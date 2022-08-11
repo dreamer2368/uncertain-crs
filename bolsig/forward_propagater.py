@@ -230,20 +230,20 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
     for name, config in configs.items():
         if (name[:9]=='transport'):
             nPoints = config['RUNSERIES'][3]
-            Te = np.zeros([nSample,nPoints])
+            Ue = np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             DT = np.zeros([nSample,nPoints])
             DL = np.zeros([nSample,nPoints])
             for k in range(nSample):
                 outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
                 output = bolsigOutput(outputFilename)
-                Te[k,:] = output.outputs[3].data[:,1]
+                Ue[k,:] = output.outputs[3].data[:,1]
                 mu[k,:] = output.outputs[4].data[:,1]
                 DT[k,:] = output.outputs[5].data[:,1]
                 DL[k,:] = output.outputs[18].data[:,1]
-            dataFilename = '%s/data/%s.Te.dat' % (rootDir,name)
+            dataFilename = '%s/data/%s.Ue.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
-            Te.tofile(fID)
+            Ue.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
@@ -261,13 +261,13 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
             nPoints = config['RUNSERIES'][3]
             rateExcite, rateIon = np.zeros([nSample, nExcitation, nPoints]), np.zeros([nSample,nPoints])
             rateStepIon = np.copy(rateIon)
-            Te = np.zeros([nSample,nPoints])
+            Ue = np.zeros([nSample,nPoints])
             mu = np.zeros([nSample,nPoints])
             excitationTags = ['C%d' % (k+2) for k in range(nExcitation)]
             for k in range(nSample):
                 outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
                 output = bolsigOutput(outputFilename)
-                Te[k,:] = output.outputs[3].data[:,1]
+                Ue[k,:] = output.outputs[3].data[:,1]
                 mu[k,:] = output.outputs[4].data[:,1]
                 for ktag, tag in enumerate(excitationTags):
                     dataType = output.typeDictS2I[tag]
@@ -278,11 +278,11 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
                 if 'C47' in output.typeDictS2I:
                     dataType = output.typeDictS2I['C47']
                     rateStepIon[k, :] = output.outputs[dataType].data[:,1]
-                    
 
-            dataFilename = '%s/data/%s.Te.dat' % (rootDir,name)
+
+            dataFilename = '%s/data/%s.Ue.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
-            Te.tofile(fID)
+            Ue.tofile(fID)
             fID.close()
             dataFilename = '%s/data/%s.muN.dat' % (rootDir,name)
             fID = open(dataFilename,'a+b')
