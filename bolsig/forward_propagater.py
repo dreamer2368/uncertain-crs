@@ -2,7 +2,7 @@ import numpy as np
 import crossSections as cross
 from swarmParameters import bolsigOutput
 from swarmData import kB, Td, swarmDatasets, swarmData
-from input_writer import lxcatConfigs, glowDischargeConfigs, writeInputFile
+from input_writer import lxcatConfigs, glowDischargeConfigs, torchConfigs, writeInputFile
 import models
 
 paschen = {'1s5': 0, '1s4': 1, '1s3': 2, '1s2': 3,
@@ -309,5 +309,5 @@ if __name__ == "__main__":
     nSample=720
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=3)
     #setupInputFiles(nSample,rootDir='./forward-propagate')
-    setupInputFiles(nSample, rootDir='./glow-discharge', configs=glowDischargeConfigs)
+    setupInputFiles(nSample, rootDir='./torch-rxn', configs=torchConfigs)
     #depositBolsigSamples(nSample, rootDir='./forward-propagate')

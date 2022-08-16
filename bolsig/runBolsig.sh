@@ -22,13 +22,9 @@ fi
 }
 
 JOBIDS=""
-for proc in {0..71}
+for proc in {0..719}
 do
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/forward-propagate/input/rate300K.${proc}.dat)"
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/forward-propagate/input/rate273K.${proc}.dat)"
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/forward-propagate/input/transport300K.${proc}.dat)"
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/forward-propagate/input/transport77K.${proc}.dat)"
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/forward-propagate/input/transport90K.${proc}.dat)"
+JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux${proc} /p/lustre1/chung28/lxcat-review/bolsig/torch-rxn/input/reaction.${proc}.dat)"
 done
 
 waitall ${JOBIDS}
