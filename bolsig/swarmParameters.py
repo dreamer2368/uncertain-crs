@@ -86,6 +86,7 @@ class singleOutput:
 class bolsigOutput:
     options = {}
     outputs = {}
+    filename = ""
 
     def __init__(self, filename, verbose=False):
         """Initialize by reading BOLSIG output file."""
@@ -93,6 +94,7 @@ class bolsigOutput:
         self.outputs = {}
         self.typeDictS2I = typeDictS2I
         self.typeDictI2S = typeDictI2S
+        self.filename = filename
         self.parseOutputFile(filename, verbose)
 
     def parseOutputFile(self, filename, verbose=False):

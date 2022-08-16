@@ -6,6 +6,10 @@ R0 = 13.605693122994  # eV
 a0 = 5.29177e-11     # m
 # electron charge
 qe = 1.60217662e-19  # C
+# Boltzmann constant
+kB = 1.380649e-23    # m2 kg s-2 K-1
+# Avogadro number
+NA = 6.0221408e23    # mol-1
 # electron mass
 me = 9.10938356e-31  # kg
 # speed of light

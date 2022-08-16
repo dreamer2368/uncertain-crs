@@ -205,14 +205,16 @@ def setupInputFiles(nSample, rootDir='.', configs = lxcatConfigs):
 
 def getReactionFromBolsig(outputFilename, collisionType, deltaE, deltaERange = 0.5, inputIndex = 3):
     output = bolsigOutput(outputFilename)
+    return getReactionFromBolsigOutput(output, collisionType, deltaE, deltaERange, inputIndex)
 
+def getReactionFromBolsigOutput(output, collisionType, deltaE, deltaERange = 0.5, inputIndex = 3):
     nPoints = output.outputs[0].data.shape[0]
     outputTable = np.zeros([nPoints, 2])
 
     if inputIndex in output.typeDictI2S:
         print("Input variable: %s" % (output.typeDictI2S[inputIndex]))
     else:
-        raise RuntimeError("Input index %d does not exist in output file %s!" % (inputIndex, outputFilename))
+        raise RuntimeError("Input index %d does not exist in output file %s!" % (inputIndex, output.filename))
 
     outputTable[:, 0] = output.outputs[inputIndex].data[:, 1]
     for idx, table in output.outputs.items():
@@ -300,6 +302,52 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
             fID = open(dataFilename,'a+b')
             rateStepIon.tofile(fID)
             fID.close()
+
+    return
+
+def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs = torchConfigs):
+
+    for name, config in configs.items():
+        nPoints = config['RUNSERIES'][3]
+        for k in range(nSample):
+            outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
+            output = bolsigOutput(outputFilename)
+            meanEnergyIdx = output.typeDictS2I["Mean energy (eV)"]
+
+            # ionization
+            collisionType = 'Ionization'
+            outputTable = getReactionFromBolsigOutput(output, collisionType, models.E_ion[0],
+                                                      deltaERange = 0.05, inputIndex=meanEnergyIdx)
+            outputTable[:, 0] *= models.qe / 1.5 / kB
+            outputTable[:, 1] *= models.NA
+            mask = (outputTable[:,1] > 0.0)
+            data = outputTable[mask, :]
+            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, collisionType, startSampleIndex + k)
+            np.savetxt(dataFilename, data)
+
+            # step-wise ionization
+            collisionType = 'Ionization'
+            outputTable = getReactionFromBolsigOutput(output, collisionType, models.E_step_ion[0],
+                                                      deltaERange = 0.05, inputIndex=meanEnergyIdx)
+            outputTable[:, 0] *= models.qe / 1.5 / kB
+            outputTable[:, 1] *= models.NA
+            mask = (outputTable[:,1] > 0.0)
+            data = outputTable[mask, :]
+            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, 'Step' + collisionType, startSampleIndex + k)
+            np.savetxt(dataFilename, data)
+
+            # lumped excitation
+            collisionType = 'Excitation'
+            excitationTable = np.zeros([nPoints, 2])
+            for Eex in models.E_ext:
+                outputTable = getReactionFromBolsigOutput(output, collisionType, Eex,
+                                                          deltaERange = 0.05, inputIndex=meanEnergyIdx)
+                excitationTable[:, 1] += outputTable[:, 1] * models.NA
+            excitationTable[:, 0] = outputTable[:, 0] * models.qe / 1.5 / kB
+            mask = (excitationTable[:,1] > 0.0)
+            data = excitationTable[mask, :]
+            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, collisionType, startSampleIndex + k)
+            np.savetxt(dataFilename, data)
 
     return
 
