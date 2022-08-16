@@ -67,6 +67,12 @@ reverse300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
              'SAVERESULTS': ['"reverse_rate.300K.dat"', 3, 1, 1, 0, 1, 0, 0, 0]
              }
 
+torchRxn = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
+            'CONDITIONS': [0., 0., 0., 3000., 3000., 0., 1.0e-4, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 10000, '0.99999 1e-5', 1],
+            'RUNSERIES': [2, 4.0e-1, 50., 200, 3],
+            'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
+            }
+
 expConfigs = {'AlAminLucas1987': AlAminLucas1987,
               'MilloyCrompton1977': MilloyCrompton1977,
               'NakamuraKurachi1988': NakamuraKurachi1988}
@@ -79,6 +85,8 @@ lxcatConfigs = {'transport300K': transport300K,
 
 glowDischargeConfigs = {'reaction300K': reaction300K,
                         'reverse300K': reverse300K}
+
+torchConfigs = {'reaction': torchRxn}
 
 
 def writeInputFile(inputFilename, expConfig, crsFile=None, outputFile=None, noscreen = True):
