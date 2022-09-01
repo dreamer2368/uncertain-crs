@@ -4,7 +4,7 @@ Gibson, J. C., Gulley, R. J., Sullivan, J. P., Buckman, S. J., Chan, V., & Burro
 Variables (Var,Unit,Rms,Max)
 *********************************
 E         eV          n/a     n/a
-crs       m2          n/a     n/a
+crs       m2          8%      n/a
 *********************************
 
 Data
