@@ -83,8 +83,30 @@ lxcatConfigs = {'transport300K': transport300K,
                 'rate300K': rate300K,
                 'rate273K': rate273K}
 
+def glowDischargeConfigCondition():
+    Torr = 133.322    # Pa
+    p0 = 250e-3 * Torr
+    T0 = 300          # K
+    Te0 = 43000.      # K
+    qe = 1.60217663e-19 # C
+    kB = 1.380649e-23 # m2 kg s-2 K-1
+    ne0 = 5.0e15      # m-3
+    nex0 = 5.0e17     # m-3
+    nTotal0 = ne0 + (p0 - ne0 * kB * Te0) / kB / T0
+    ionDeg = ne0 / nTotal0 # approximated assuming small ionization degree
+    Xex0 = nex0 / nTotal0
+
+    bolsigCondition = [0., 0., 0., T0, T0,   \
+                       0., ionDeg, ne0, 1.,   \
+                       1., 1, 1, 2,              \
+                       0., 200, 0, 200.,         \
+                       1.0e-10, 1.0e-4, 10000, '%.5E %.5E' % (1. - Xex0, Xex0), 1]
+    return bolsigCondition
+
 glowDischargeConfigs = {'reaction300K': reaction300K,
                         'reverse300K': reverse300K}
+glowDischargeConfigs['reaction300K']['CONDITIONS'] = glowDischargeConfigCondition()
+glowDischargeConfigs['reverse300K']['CONDITIONS'] = glowDischargeConfigCondition()
 
 torchConfigs = {'reaction': torchRxn}
 

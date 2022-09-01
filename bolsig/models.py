@@ -25,7 +25,8 @@ Efromk2 = hbar * hbar / 2.0 / me / qe / a0 / a0
 
 # Excitation energy levels in eV, from NIST
 E_ext = [11.54835442, 11.62359272, 11.72316039, 11.82807116]
-
+E_ext_2p = [1.29100E+01, 1.30800E+01, 1.31000E+01, 1.31500E+01, 1.31700E+01,
+            1.32700E+01, 1.32800E+01, 1.33000E+01, 1.33300E+01, 1.34800E+01]
 # Ionization energy levels in eV, from NIST
 E_ion = [15.7596119, 27.62967]
 

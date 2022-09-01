@@ -305,7 +305,8 @@ def depositBolsigSamples(nSample, rootDir=".", configs = lxcatConfigs):
 
     return
 
-def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs = torchConfigs):
+def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs = torchConfigs, comments=None):
+    import h5py
 
     for name, config in configs.items():
         nPoints = config['RUNSERIES'][3]
@@ -322,8 +323,15 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputTable[:, 1] *= models.NA
             mask = (outputTable[:,1] > 0.0)
             data = outputTable[mask, :]
-            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, collisionType, startSampleIndex + k)
-            np.savetxt(dataFilename, data)
+            dataFilename = '%s/data/%s.%08d.h5' % (rootDir, collisionType, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
+            # np.savetxt(dataFilename, data)
 
             # step-wise ionization
             collisionType = 'Ionization'
@@ -333,21 +341,86 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputTable[:, 1] *= models.NA
             mask = (outputTable[:,1] > 0.0)
             data = outputTable[mask, :]
-            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, 'Step' + collisionType, startSampleIndex + k)
-            np.savetxt(dataFilename, data)
+            dataFilename = '%s/data/%s.%08d.h5' % (rootDir, 'Step' + collisionType, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
 
-            # lumped excitation
+            # 1s-level excitation
             collisionType = 'Excitation'
             excitationTable = np.zeros([nPoints, 2])
-            for Eex in models.E_ext:
+            metaTable = np.zeros([nPoints, 2])
+            resoTable = np.zeros([nPoints, 2])
+            for k, Eex in enumerate(models.E_ext):
                 outputTable = getReactionFromBolsigOutput(output, collisionType, Eex,
                                                           deltaERange = 0.05, inputIndex=meanEnergyIdx)
+                excitationTable[:, 1] += outputTable[:, 1] * models.NA
+                if ((k==0) or (k==2)):
+                    metaTable += outputTable[:, 1] * models.NA
+                else:
+                    resoTable += outputTable[:, 1] * models.NA
+            excitationTable[:, 0] = outputTable[:, 0] * models.qe / 1.5 / kB
+            metaTable[:, 0] = np.copy(excitationTable[:, 0])
+            resoTable[:, 0] = np.copy(excitationTable[:, 0])
+
+            # lumped-excitation
+            mask = (excitationTable[:,1] > 0.0)
+            data = excitationTable[mask, :]
+            dataFilename = '%s/data/1s-lumped.%08d.h5' % (rootDir, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
+
+            # metastable
+            mask = (metaTable[:,1] > 0.0)
+            data = metaTable[mask, :]
+            dataFilename = '%s/data/1s-metastable.%08d.h5' % (rootDir, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
+
+            # resonance
+            mask = (resoTable[:,1] > 0.0)
+            data = resoTable[mask, :]
+            dataFilename = '%s/data/1s-resonance.%08d.h5' % (rootDir, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
+
+            # 2p-level excitation
+            collisionType = 'Excitation'
+            excitationTable = np.zeros([nPoints, 2])
+            for k, Eex in enumerate(models.E_ext_2p):
+                outputTable = getReactionFromBolsigOutput(output, collisionType, Eex,
+                                                          deltaERange = 0.005, inputIndex=meanEnergyIdx)
                 excitationTable[:, 1] += outputTable[:, 1] * models.NA
             excitationTable[:, 0] = outputTable[:, 0] * models.qe / 1.5 / kB
             mask = (excitationTable[:,1] > 0.0)
             data = excitationTable[mask, :]
-            dataFilename = '%s/data/%s.%08d.txt' % (rootDir, collisionType, startSampleIndex + k)
-            np.savetxt(dataFilename, data)
+            dataFilename = '%s/data/2p-lumped.%08d.h5' % (rootDir, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                ds = f.create_dataset('table', data=data)
+                ds.attrs['name0'] = 'electron temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'reaction rate'
+                ds.attrs['unit1'] = 'm3/mol/s'
+                if (comments is not None): ds.attrs['comments'] = comments
 
     return
 
