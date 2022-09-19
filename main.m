@@ -163,7 +163,7 @@ function crs = MERT(E)
     for L = 1:20
         eta0 = eta1;
         L1 = L+1;
-        eta1 = pi * alpha * k / (2.*L1 + 3.) / (2.*L1 + 1.) / (2.*L1 - 1.);
+        eta1 = pi * alpha0 * k / (2.*L1 + 3.) / (2.*L1 + 1.) / (2.*L1 - 1.);
         eta1 = atan(eta1 .* k);
 
         crs = crs + L1 * sin(eta0 - eta1).^2;
