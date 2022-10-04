@@ -1,0 +1,9 @@
+nominal_file: nominal-rxn/StepwiseExcitations.nominal.h5
+
+sample_size: 7200
+
+prefix: StepwiseExcitations
+
+sample_directory: test
+
+relative_uncertainty: 200.0 # percent
