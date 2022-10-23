@@ -207,20 +207,21 @@ def getReactionFromBolsig(outputFilename, collisionType, deltaE, deltaERange = 0
     output = bolsigOutput(outputFilename)
     return getReactionFromBolsigOutput(output, collisionType, deltaE, deltaERange, inputIndex)
 
-def getReactionFromBolsigOutput(output, collisionType, deltaE, deltaERange = 0.5, inputIndex = 3):
+def getReactionFromBolsigOutput(output, collisionType, deltaE, deltaERange = 0.5, inputIndex = 3, verbose=False):
     nPoints = output.outputs[0].data.shape[0]
     outputTable = np.zeros([nPoints, 2])
 
     if inputIndex in output.typeDictI2S:
-        print("Input variable: %s" % (output.typeDictI2S[inputIndex]))
+        if (verbose): print("Input variable: %s" % (output.typeDictI2S[inputIndex]))
     else:
         raise RuntimeError("Input index %d does not exist in output file %s!" % (inputIndex, output.filename))
 
     outputTable[:, 0] = output.outputs[inputIndex].data[:, 1]
     for idx, table in output.outputs.items():
         if( (table.collisionType == collisionType) and (table.deltaE > deltaE - deltaERange) and (table.deltaE < deltaE + deltaERange)):
-            print ("Output collision type: %s" % table.collisionType)
-            print ("Output reaction energy: %.8E" % table.deltaE)
+            if (verbose):
+                print ("Output collision type: %s" % table.collisionType)
+                print ("Output reaction energy: %.8E" % table.deltaE)
             outputTable[:, 1] = table.data[:, 1]
             return outputTable
 
@@ -322,7 +323,7 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputTable[:, 0] *= models.qe / 1.5 / kB
             outputTable[:, 1] *= models.NA
             mask = (outputTable[:,1] > 0.0)
-            data = outputTable[mask, :]
+            data = outputTable#[mask, :]
             dataFilename = '%s/data/%s.%08d.h5' % (rootDir, collisionType, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
                 ds = f.create_dataset('table', data=data)
@@ -340,7 +341,7 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputTable[:, 0] *= models.qe / 1.5 / kB
             outputTable[:, 1] *= models.NA
             mask = (outputTable[:,1] > 0.0)
-            data = outputTable[mask, :]
+            data = outputTable#[mask, :]
             dataFilename = '%s/data/%s.%08d.h5' % (rootDir, 'Step' + collisionType, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
                 ds = f.create_dataset('table', data=data)
@@ -355,21 +356,21 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             excitationTable = np.zeros([nPoints, 2])
             metaTable = np.zeros([nPoints, 2])
             resoTable = np.zeros([nPoints, 2])
-            for k, Eex in enumerate(models.E_ext):
+            for ex, Eex in enumerate(models.E_ext):
                 outputTable = getReactionFromBolsigOutput(output, collisionType, Eex,
                                                           deltaERange = 0.05, inputIndex=meanEnergyIdx)
                 excitationTable[:, 1] += outputTable[:, 1] * models.NA
-                if ((k==0) or (k==2)):
-                    metaTable += outputTable[:, 1] * models.NA
+                if ((ex==0) or (ex==2)):
+                    metaTable[:, 1] += outputTable[:, 1] * models.NA
                 else:
-                    resoTable += outputTable[:, 1] * models.NA
+                    resoTable[:, 1] += outputTable[:, 1] * models.NA
             excitationTable[:, 0] = outputTable[:, 0] * models.qe / 1.5 / kB
             metaTable[:, 0] = np.copy(excitationTable[:, 0])
             resoTable[:, 0] = np.copy(excitationTable[:, 0])
 
             # lumped-excitation
             mask = (excitationTable[:,1] > 0.0)
-            data = excitationTable[mask, :]
+            data = excitationTable#[mask, :]
             dataFilename = '%s/data/1s-lumped.%08d.h5' % (rootDir, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
                 ds = f.create_dataset('table', data=data)
@@ -381,7 +382,7 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
 
             # metastable
             mask = (metaTable[:,1] > 0.0)
-            data = metaTable[mask, :]
+            data = metaTable#[mask, :]
             dataFilename = '%s/data/1s-metastable.%08d.h5' % (rootDir, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
                 ds = f.create_dataset('table', data=data)
@@ -393,7 +394,7 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
 
             # resonance
             mask = (resoTable[:,1] > 0.0)
-            data = resoTable[mask, :]
+            data = resoTable#[mask, :]
             dataFilename = '%s/data/1s-resonance.%08d.h5' % (rootDir, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
                 ds = f.create_dataset('table', data=data)
@@ -406,22 +407,23 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             # 2p-level excitation
             collisionType = 'Excitation'
             excitationTable = np.zeros([nPoints, 2])
-            for k, Eex in enumerate(models.E_ext_2p):
+            for ex, Eex in enumerate(models.E_ext_2p):
                 outputTable = getReactionFromBolsigOutput(output, collisionType, Eex,
                                                           deltaERange = 0.005, inputIndex=meanEnergyIdx)
                 excitationTable[:, 1] += outputTable[:, 1] * models.NA
             excitationTable[:, 0] = outputTable[:, 0] * models.qe / 1.5 / kB
             mask = (excitationTable[:,1] > 0.0)
-            data = excitationTable[mask, :]
+            table = excitationTable#[mask, :]
             dataFilename = '%s/data/2p-lumped.%08d.h5' % (rootDir, startSampleIndex + k)
             with h5py.File(dataFilename,'w') as f:
-                ds = f.create_dataset('table', data=data)
+                ds = f.create_dataset('table', data=table)
                 ds.attrs['name0'] = 'electron temperature'
                 ds.attrs['unit0'] = 'K'
                 ds.attrs['name1'] = 'reaction rate'
                 ds.attrs['unit1'] = 'm3/mol/s'
                 if (comments is not None): ds.attrs['comments'] = comments
 
+            print('%08d-th sample is collected.' % (startSampleIndex + k))
     return
 
 if __name__ == "__main__":
@@ -430,5 +432,5 @@ if __name__ == "__main__":
     nSample=720
     #sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./forward-propagate/crs', nSample=3)
     #setupInputFiles(nSample,rootDir='./forward-propagate')
-    setupInputFiles(nSample, rootDir='./torch-rxn', configs=torchConfigs)
+    setupInputFiles(nSample, rootDir='./glow-discharge', configs=glowDischargeConfigs)
     #depositBolsigSamples(nSample, rootDir='./forward-propagate')
