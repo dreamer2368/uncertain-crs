@@ -25,7 +25,7 @@ JOBIDS=""
 for proc in {0..719}
 do
 JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux /p/lustre1/chung28/lxcat-review/bolsig/glow-discharge/input/reaction300K.${proc}.dat)"
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux /p/lustre1/chung28/lxcat-review/bolsig/glow-discharge/input/reverse300K.${proc}.dat)"
+###JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux /p/lustre1/chung28/lxcat-review/bolsig/glow-discharge/input/reverse300K.${proc}.dat)"
 done
 
 waitall ${JOBIDS}

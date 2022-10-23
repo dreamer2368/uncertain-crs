@@ -103,10 +103,11 @@ def glowDischargeConfigCondition():
                        1.0e-10, 1.0e-4, 10000, '%.5E %.5E' % (1. - Xex0, Xex0), 1]
     return bolsigCondition
 
-glowDischargeConfigs = {'reaction300K': reaction300K,
-                        'reverse300K': reverse300K}
+#glowDischargeConfigs = {'reaction300K': reaction300K,
+#                        'reverse300K': reverse300K}
+glowDischargeConfigs = {'reaction300K': reaction300K}
 glowDischargeConfigs['reaction300K']['CONDITIONS'] = glowDischargeConfigCondition()
-glowDischargeConfigs['reverse300K']['CONDITIONS'] = glowDischargeConfigCondition()
+#glowDischargeConfigs['reverse300K']['CONDITIONS'] = glowDischargeConfigCondition()
 
 torchConfigs = {'reaction': torchRxn}
 
