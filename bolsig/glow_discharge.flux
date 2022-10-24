@@ -21,9 +21,9 @@ scontrol show job $SLURM_JOBID
 
 chmod u+x $commandFile
 
-for k in {1..10}
+for k in {0..9}
 do
-    python3 -c "from forward_propagater import sampleCrossSection; sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./glow-discharge/crs', nSample=$numProcs);"
+    python3 -c "from forward_propagater import sampleCrossSection; sampleCrossSection(sampleDir='../crs-Bayes-gpr/without-swarm', crsDir='./glow-discharge/crs', nSample=$numProcs, crsParamDir='./glow-discharge/crs-param-samples', iteration=$k);"
     if [ $? -ne 0 ]; then
         echo "writing crs-sections is not run successfully."
         exit -1
@@ -35,7 +35,7 @@ do
         exit -1
     fi
 
-    let "idx=$numProcs*($k-1)"
+    let "idx=$numProcs*$k"
     python3 -c "from forward_propagater import writeBolsigOutputSamples, glowDischargeConfigs; writeBolsigOutputSamples($numProcs, startSampleIndex=$idx, rootDir='./glow-discharge', configs=glowDischargeConfigs, comments='$COMMENTS');"
     if [ $? -ne 0 ]; then
         echo "depositing samples is not run successfully."

@@ -135,7 +135,7 @@ def generateCrossSection(inputs):
         targetcrs.writeLXCatFile(filename)
     return targetcrs
 
-def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1):
+def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1, crsParamDir='.', iteration=0):
     sample_momentum = np.fromfile('%s/crs.elastic.7param.dat' % sampleDir)
     sample_momentum = np.reshape(sample_momentum, [int(len(sample_momentum)/9), 9])
 
@@ -185,7 +185,30 @@ def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1):
         theta = [theta_momentum[k], theta_ion[k], theta_ext, theta_step_ion[k]]
         filename = '%s/test.crs.%d.txt' % (crsDir, k)
         inputss += [[theta, filename]]
-        # print(inputss)
+
+        import h5py
+        paramFile = '%s/crs-params.%08d.h5' % (crsParamDir, k + nSample * iteration)
+        with h5py.File(paramFile,'w') as f:
+            f.attrs['comment'] = 'Cross-section model parameters for %d-th sample.' % (k + nSample * iteration)
+
+            dset = f.create_dataset('elastic-momentum-transfer', data=theta_momentum[k])
+            dset.attrs['model'] = '7-param elastic shifted MERT model.'
+
+            dset = f.create_dataset('ionization', data=theta_ion[k])
+            dset.attrs['model'] = '3-param ionization BED model.'
+
+            dset = f.create_dataset('1s5 excitation', data=theta_ext1[k])
+            dset.attrs['model'] = '2-param metastable model.'
+
+            dset = f.create_dataset('1s4 excitation', data=theta_ext2[k])
+            dset.attrs['model'] = '2-param resonance model.'
+
+            dset = f.create_dataset('1s3 excitation', data=theta_ext3[k])
+            dset.attrs['model'] = '2-param metastable model.'
+
+            dset = f.create_dataset('1s2 excitation', data=theta_ext4[k])
+            dset.attrs['model'] = '2-param resonance model.'
+
 
     for inputt in inputss:
         generateCrossSection(inputt)
@@ -315,6 +338,46 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
             output = bolsigOutput(outputFilename)
             meanEnergyIdx = output.typeDictS2I["Mean energy (eV)"]
+            Te = output.outputs[meanEnergyIdx].data[:, 1]
+            Te *= models.qe / 1.5 / kB
+
+            # transport - mobility
+            if "Mobility *N (1/m/V/s)" in output.typeDictS2I:
+                mobilityIdx = output.typeDictS2I["Mobility *N (1/m/V/s)"]
+            else:
+                raise RuntimeError("Mobility index does not exist in output file %s!" % (output.filename))
+
+            nPoints = output.outputs[0].data.shape[0]
+            outputTable1 = np.zeros([nPoints, 2])
+            outputTable1[:, 0] = Te
+            outputTable1[:, 1] = output.outputs[mobilityIdx].data[:, 1]
+
+            # transport - diffusivity
+            if "Diffusion coefficient *N (1/m/s)" in output.typeDictS2I:
+                diffusivityIdx = output.typeDictS2I["Diffusion coefficient *N (1/m/s)"]
+            else:
+                raise RuntimeError("Diffusivity index does not exist in output file %s!" % (output.filename))
+
+            outputTable2 = np.zeros([nPoints, 2])
+            outputTable2[:, 0] = Te
+            outputTable2[:, 1] = output.outputs[diffusivityIdx].data[:, 1]
+
+            # transport - save to hdf5 file
+            dataFilename = '%s/data/Transport.%08d.h5' % (rootDir, startSampleIndex + k)
+            with h5py.File(dataFilename,'w') as f:
+                if (comments is not None): f.attrs['comments'] = comments
+
+                ds = f.create_dataset('mobility', data=outputTable1)
+                ds.attrs['name0'] = 'Electron Temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'Mobility * N'
+                ds.attrs['unit1'] = '1/m/V/s'
+
+                ds = f.create_dataset('diffusivity', data=outputTable2)
+                ds.attrs['name0'] = 'Electron Temperature'
+                ds.attrs['unit0'] = 'K'
+                ds.attrs['name1'] = 'Diffusivity * N'
+                ds.attrs['unit1'] = '1/m/s'
 
             # ionization
             collisionType = 'Ionization'
