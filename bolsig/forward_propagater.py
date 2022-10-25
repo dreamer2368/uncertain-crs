@@ -338,7 +338,7 @@ def writeBolsigOutputSamples(nSample, startSampleIndex=0, rootDir=".", configs =
             outputFilename = "%s/output/%s.%d.dat" % (rootDir, name, k)
             output = bolsigOutput(outputFilename)
             meanEnergyIdx = output.typeDictS2I["Mean energy (eV)"]
-            Te = output.outputs[meanEnergyIdx].data[:, 1]
+            Te = np.copy(output.outputs[meanEnergyIdx].data[:, 1])
             Te *= models.qe / 1.5 / kB
 
             # transport - mobility
