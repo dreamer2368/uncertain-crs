@@ -120,3 +120,4 @@ Details of this are in `writeBolsigOutputSamples` in `bolsig/forward_propagater.
 - `bolsig/crsData.py`: read experimental cross-section datasets in `crs-exp/`.
 - `bolsig/swarmData.py`: read experimental swarm-parameter datasets in `swarm/`.
 - `bolsig/input_writer.py`: can write `BOLSIG+` input file, with some presets available.
+- `bolsig/forward_propagater.py`: modules for uncertainty propagation.
