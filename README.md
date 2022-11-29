@@ -2,10 +2,10 @@
 
 - [Bayesian inference of cross-sections with a Gaussian-process systematic error model](#bayesian-inference-of-cross-sections-with-a-gaussian-process-systematic-error-model)
 - [Workflow for cross-section uncertainty propagation](#workflow-for-cross-section-uncertainty-propagation)
-  - [Set up input files for BOLSIG+](#set-up-input-files-for-bolsig+)
+  - [Set up input files for BOLSIG](#set-up-input-files-for-bolsig)
   - [Generating cross-section samples](#generating-cross-section-samples)
-  - [Running BOLSIG+](#running-bolsig+)
-  - [Storing transport/chemistry outputs](#storing-transport/chemistry-outputs)
+  - [Running BOLSIG](#running-bolsig)
+  - [Storing transport and chemistry outputs](#storing-transport-and-chemistry-outputs)
 - [Some useful files](#some-useful-files)
 
 ## Bayesian inference of cross-sections with a Gaussian-process systematic error model
@@ -36,10 +36,10 @@ msub glow_discharge.flux
 ```
 `glow_discharge.flux` is composed of three following stages:
 - [Generating cross-section samples](#generating-cross-section-samples)
-- [Running BOLSIG+](#running-bolsig+)
-- [Storing transport/chemistry outputs](#storing-transport/chemistry-outputs)
+- [Running BOLSIG](#running-bolsig)
+- [Storing transport and chemistry outputs](#storing-transport-and-chemistry-outputs)
 
-### Set up input files for BOLSIG+
+### Set up input files for BOLSIG
 In order to set up input files for `BOLSIG+`, run the following python file:
 ```
 cd bolsig
@@ -75,7 +75,7 @@ python3 -c "from forward_propagater import sampleCrossSection; sampleCrossSectio
 ```
 Generated samples are stored in the directory specified with `crsDir`. Corresponding parameters are stored in the directory specified with `crsParamDir`.
 
-### Running BOLSIG+
+### Running BOLSIG
 For a concurrent execution of multiple `BOLSIG+`, we use `flux` framework built in quartz.
 This stage requires the executable `bolsigminus` (or `bolsigminus-linux` for linux) in `bolsig` directory.
 This corresponds to the command in `glow_discharge.flux`:
@@ -95,7 +95,7 @@ JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review
 done
 ```
 
-### Storing transport/chemistry outputs
+### Storing transport and chemistry outputs
 `BOLSIG+` outputs are post-processed into HDF5 files that can be used in [glowDischarge](https://github.com/pecos/glowDischarge) or [torch1d](https://github.com/pecos/torch1d).
 These HDF5 files are stored in `rootDir/data`. This stage corresponds to the following command in `bolsig/glow_discharge.flux`:
 ```
