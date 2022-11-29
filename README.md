@@ -28,7 +28,7 @@ All the result cross-section model parameter samples are stored in `crs-Bayes-gp
 
 Forward propagation of cross-section uncertainties is executed via [`BOLSIG+`](https://us.lxcat.net/data/set_type.php) and [`flux`](https://computing.llnl.gov/projects/flux-building-framework-resource-management) on [quartz](https://hpc.llnl.gov/hardware/compute-platforms/quartz).
 An example job script for glow-discharge configuration is in `bolsig/glow_discharge.flux`. 
-Before running this job script, input files for `BOLSIG+` should be set up (see [Set up input files for BOLSIG+](#set-up-input-files-for-bolsig+)).
+Before running this job script, input files for `BOLSIG+` should be set up (see [Set up input files for BOLSIG](#set-up-input-files-for-bolsig)).
 After the input file setup, run the job script on quartz:
 ```
 cd bolsig
