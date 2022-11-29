@@ -209,11 +209,29 @@ def sampleCrossSection(sampleDir='.', crsDir='.', nSample=1, crsParamDir='.', it
             dset = f.create_dataset('1s2 excitation', data=theta_ext4[k])
             dset.attrs['model'] = '2-param resonance model.'
 
+            dset = f.create_dataset('step-wise ionization', data=theta_step_ion[k])
+            dset.attrs['model'] = '3-param ionization BED model.'
+
 
     for inputt in inputss:
         generateCrossSection(inputt)
 
     return
+
+def readCrossSectionInput(paramFile):
+    import h5py
+    with h5py.File(paramFile,'r') as f:
+        theta_momentum = f['elastic-momentum-transfer'][...]
+        theta_ion = f['ionization'][...]
+        theta_ext1 = f['1s5 excitation'][...]
+        theta_ext2 = f['1s4 excitation'][...]
+        theta_ext3 = f['1s3 excitation'][...]
+        theta_ext4 = f['1s2 excitation'][...]
+        theta_step_ion = f['step-wise ionization'][...]
+
+    theta_ext = [theta_ext1, theta_ext2, theta_ext3, theta_ext4]
+    theta = [theta_momentum, theta_ion, theta_ext, theta_step_ion]
+    return theta
 
 def setupInputFiles(nSample, rootDir='.', configs = lxcatConfigs):
 
@@ -497,3 +515,9 @@ if __name__ == "__main__":
     #setupInputFiles(nSample,rootDir='./forward-propagate')
     setupInputFiles(nSample, rootDir='./glow-discharge', configs=glowDischargeConfigs)
     #depositBolsigSamples(nSample, rootDir='./forward-propagate')
+
+#    idx = 5595
+#    paramFile = './glow-discharge/crs-param-samples/crs-params.%08d.h5' % idx
+#    theta = readCrossSectionInput(paramFile)
+#    crsFile = 'Sample.%08d.txt' % idx
+#    generateCrossSection([theta, crsFile])

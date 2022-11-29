@@ -57,20 +57,20 @@ reaction300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
              'CONDITIONS': [0., 0., 0., 300., 300., 0., 2.5e-6, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 10000, '0.99999 1e-5', 1],
 #             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0.0, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.99999 1e-5', 1],
              'RUNSERIES': [2, 2.0e-1, 50., 200, 3],
-             'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
+             'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 1]
              }
 
 reverse300K = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
              'CONDITIONS': [0., 0., 0., 300., 300., 0., 2.5e-6, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 10000, '0.99999 1e-5', 1],
 #             'CONDITIONS': [0., 0., 0., 300., 300., 0., 0.0, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 1000, '0.99999 1e-5', 1],
              'RUNSERIES': [2, 2.0e-1, 50., 200, 3],
-             'SAVERESULTS': ['"reverse_rate.300K.dat"', 3, 1, 1, 0, 1, 0, 0, 0]
+             'SAVERESULTS': ['"reverse_rate.300K.dat"', 3, 1, 1, 0, 1, 0, 0, 1]
              }
 
 torchRxn = {'READCOLLISIONS': ['"test-crs.txt"', 'Ar Ar*', 1],
             'CONDITIONS': [0., 0., 0., 3000., 3000., 0., 1.0e-4, 8.0E16, 1., 1., 1, 1, 2, 0., 200, 0, 200., 1.0e-10, 1.0e-4, 10000, '0.99999 1e-5', 1],
             'RUNSERIES': [2, 4.0e-1, 50., 200, 3],
-            'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 0]
+            'SAVERESULTS': ['"reaction_rate.300K.dat"', 3, 1, 1, 1, 0, 0, 0, 1]
             }
 
 expConfigs = {'AlAminLucas1987': AlAminLucas1987,
