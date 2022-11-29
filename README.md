@@ -12,13 +12,13 @@
 
 Originally, Bayesian calibration of all cross-section model parameters was implemented on the notebook `bolsig/crs-exp-Bayes-gpu.ipynb`.
 For a better visibility, this is split into multiple notebooks, each corresponding to a collision:
-- `bolsig/UQ-elastic`
-- `bolsig/UQ-ionization`
-- `bolsig/UQ-stepwise-ionization`
-- `bolsig/UQ-1s5`
-- `bolsig/UQ-1s4`
-- `bolsig/UQ-1s3`
-- `bolsig/UQ-1s2`
+- `bolsig/UQ-elastic.ipynb`
+- `bolsig/UQ-ionization.ipynb`
+- `bolsig/UQ-stepwise-ionization.ipynb`
+- `bolsig/UQ-1s5.ipynb`
+- `bolsig/UQ-1s4.ipynb`
+- `bolsig/UQ-1s3.ipynb`
+- `bolsig/UQ-1s2.ipynb`
 
 Experimental measurement data of the cross-sections are stored in `crs-exp/`.
 LXCat standard cross-section datasets are stored in `crs/`.
