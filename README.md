@@ -10,6 +10,10 @@
 
 ## Bayesian inference of cross-sections with a Gaussian-process systematic error model
 
+Parametric uncertainties of cross-sections are calibrated via Bayesian inference based on the measurement data in:
+- Experimental data: `crs-exp/`
+- BSR dataset: `bolsig/crs/BSR.txt` (obtained from [LXCat](https://us.lxcat.net))
+
 Originally, Bayesian calibration of all cross-section model parameters was implemented on the notebook `bolsig/crs-exp-Bayes-gpu.ipynb`.
 For a better visibility, this is split into multiple notebooks, each corresponding to a collision:
 - `bolsig/UQ-elastic.ipynb`
@@ -20,13 +24,20 @@ For a better visibility, this is split into multiple notebooks, each correspondi
 - `bolsig/UQ-1s3.ipynb`
 - `bolsig/UQ-1s2.ipynb`
 
-Experimental measurement data of the cross-sections are stored in `crs-exp/`.
-LXCat standard cross-section datasets are stored in `crs/`.
-All the result cross-section model parameter samples are stored in `crs-Bayes-gpr/without-swarm/`.
+The notebooks above read the measurement data and produce the parameter samples for corresponding cross-section models as:
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.elastic.7param.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.ionization.total.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.ionization.step-wise.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s5.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s4.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s3.dat`
+- `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s2.dat`
+
+More details are in the notebooks.
 
 ## Workflow for cross-section uncertainty propagation
 
-Forward propagation of cross-section uncertainties is executed via [`BOLSIG+`](https://us.lxcat.net/data/set_type.php) and [`flux`](https://computing.llnl.gov/projects/flux-building-framework-resource-management) on [quartz](https://hpc.llnl.gov/hardware/compute-platforms/quartz).
+Forward propagation of cross-section uncertainties is executed via [`BOLSIG+`](https://us.lxcat.net) and [`flux`](https://computing.llnl.gov/projects/flux-building-framework-resource-management) on [quartz](https://hpc.llnl.gov/hardware/compute-platforms/quartz).
 An example job script for glow-discharge configuration is in `bolsig/glow_discharge.flux`. 
 Before running this job script, input files for `BOLSIG+` should be set up (see [Set up input files for BOLSIG](#set-up-input-files-for-bolsig)).
 After the input file setup, run the job script on quartz:
