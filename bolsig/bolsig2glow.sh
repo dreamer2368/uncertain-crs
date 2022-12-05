@@ -24,7 +24,7 @@ fi
 JOBIDS=""
 for proc in {0..719}
 do
-JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux /p/lustre1/chung28/lxcat-review/bolsig/glow-discharge/input/reaction300K.${proc}.dat)"
+JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=./out/bolsig_result_${proc}.out ./bolsigminus-linux ./glow-discharge/input/reaction300K.${proc}.dat)"
 ###JOBIDS="$JOBIDS $(flux mini submit -n 1 --output=/p/lustre1/chung28/lxcat-review/bolsig/out/bolsig_result_${proc}.out ./bolsigminus-linux /p/lustre1/chung28/lxcat-review/bolsig/glow-discharge/input/reverse300K.${proc}.dat)"
 done
 
@@ -35,4 +35,3 @@ if [ $? -ne 0 ]; then
 else
    echo "running bolsig succeeded."
 fi
-
