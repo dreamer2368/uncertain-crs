@@ -33,7 +33,7 @@ The notebooks above read the measurement data and produce the parameter samples 
 - `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s3.dat`
 - `bolsig/crs-Bayes-gpr/without-swarm/crs.excitation.1s2.dat`
 
-More details are in the notebooks.
+More details are in the notebooks. **NOTE: running the notebook files above will overwrite the sample files in `bolsig/crs-Bayes-gpr/without-swarm/`.**
 
 ## Workflow for cross-section uncertainty propagation
 
