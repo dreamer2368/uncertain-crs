@@ -102,6 +102,10 @@ For the example in the current repository, this command generates:
 
 
 ### Running BOLSIG
+We run BOLSIG simulations with
+- the input files set up in [Set up input files for BOLSIG](#set-up-input-files-for-bolsig)
+- the cross-section files set up in [Generating cross-section samples](#generating-cross-section-samples)
+
 For a concurrent execution of multiple `BOLSIG+`, we use `flux` framework built in quartz.
 This stage requires the executable `bolsigminus` (or `bolsigminus-linux` for linux) in `bolsig` directory.
 This corresponds to the command in `glow_discharge.flux`:
@@ -125,7 +129,7 @@ If run successfully, this command generates the BOLSIG+ output files:
 - `bolsig/glow-discharge/output/reaction300K.0.txt`, `bolsig/glow-discharge/output/reaction300K.1.txt`, ...
 
 ### Storing transport and chemistry outputs
-`BOLSIG+` outputs are post-processed into HDF5 files that can be used in [glowDischarge](https://github.com/pecos/glowDischarge) or [torch1d](https://github.com/pecos/torch1d).
+`BOLSIG+` outputs from [Running BOLSIG](#running-bolsig) are post-processed into HDF5 files that can be used in [glowDischarge](https://github.com/pecos/glowDischarge) or [torch1d](https://github.com/pecos/torch1d).
 These HDF5 files are stored in `rootDir/data`. This stage corresponds to the following command in `bolsig/glow_discharge.flux`:
 ```
 let "idx=$numProcs*$k"
