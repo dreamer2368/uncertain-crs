@@ -1,5 +1,6 @@
 # lxcat-review
 
+- [License](#license)
 - [Bayesian inference of cross-sections with a Gaussian-process systematic error model](#bayesian-inference-of-cross-sections-with-a-gaussian-process-systematic-error-model)
 - [Workflow for cross-section uncertainty propagation](#workflow-for-cross-section-uncertainty-propagation)
   - [Set up input files for BOLSIG](#set-up-input-files-for-bolsig)
@@ -7,6 +8,17 @@
   - [Running BOLSIG](#running-bolsig)
   - [Storing transport and chemistry outputs](#storing-transport-and-chemistry-outputs)
 - [Some useful files](#some-useful-files)
+
+## License
+
+This project is licensed under the **BSD 3-Clause License** — see the [LICENSE.md](LICENSE.md) file for details.
+
+If you use this code, please cite:
+
+> S. W. Chung, T. A. Oliver, L. L. Raja, and R. D. Moser,
+> "Characterization of uncertainties in electron-argon collision cross sections,"
+> *Plasma Sources Sci. Technol.* **34**, 025009 (2025).
+> [https://doi.org/10.1088/1361-6595/adacd5](https://doi.org/10.1088/1361-6595/adacd5)
 
 ## Bayesian inference of cross-sections with a Gaussian-process systematic error model
 
