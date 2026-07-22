@@ -1,4 +1,4 @@
-# lxcat-review
+# uncertain-crs
 
 - [License](#license)
 - [Bayesian inference of cross-sections with a Gaussian-process systematic error model](#bayesian-inference-of-cross-sections-with-a-gaussian-process-systematic-error-model)
