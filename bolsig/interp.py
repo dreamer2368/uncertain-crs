@@ -43,13 +43,13 @@ def histogram_weight_2d(data_x, data_y, Nx, Ny, xlim, ylim):
 
     dx, dy = (xmax - xmin) / (Nx + 1), (ymax - ymin) / (Nx + 1)
 
-    gxl = (np.floor((data_x - xmin) / dx)).astype(np.int)
+    gxl = (np.floor((data_x - xmin) / dx)).astype(int)
     gxr = gxl + 1
     hx = (data_x - xmin) / dx - gxl
     fxl = 1.0 - hx
     fxr = hx
 
-    gyl = (np.floor((data_y - ymin) / dy)).astype(np.int)
+    gyl = (np.floor((data_y - ymin) / dy)).astype(int)
     gyr = gyl + 1
     hy = (data_y - ymin) / dy - gyl
     fyl = 1.0 - hy

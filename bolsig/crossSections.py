@@ -141,7 +141,7 @@ class multipleCrossSections:
                     self.crs[ncrs].colName = fp.readline().strip()
 
                     if (typeDictI2S[self.crs[ncrs].colType] != 'ATTACHMENT'):
-                        self.crs[ncrs].deltaE  = np.float(fp.readline().strip().split()[0])
+                        self.crs[ncrs].deltaE  = float(fp.readline().strip().split()[0])
 
                     # Read until we find a number
                     tmp = fp.readline().strip()
@@ -152,14 +152,14 @@ class multipleCrossSections:
 
                     # Once we find numbers, read until we don't find a number
                     d = tmp.split()
-                    self.crs[ncrs].data[0,0] = np.float(d[0])
-                    self.crs[ncrs].data[0,1] = np.float(d[1])
+                    self.crs[ncrs].data[0,0] = float(d[0])
+                    self.crs[ncrs].data[0,1] = float(d[1])
                     tmp = fp.readline().strip()
                     while (tmp[0].isdigit() and not (tmp=='')):
                         d = tmp.split()
                         self.crs[ncrs].data = \
                             np.append(self.crs[ncrs].data,
-                                      [[np.float(d[0]), np.float(d[1])]], axis=0)
+                                      [[float(d[0]), float(d[1])]], axis=0)
                         tmp = fp.readline().strip()
 
                     if printOut:
